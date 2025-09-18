@@ -1,0 +1,33 @@
+# Build folders
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+
+# Rider / JetBrains
+.idea/
+
+# Build results
+*.dll
+*.exe
+*.log
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Others
+*.cache
+*.dbmdl
+*.jfm
+*.pdb
+*.tmp
+*.bak
+
+# macOS / Linux junk
+.DS_Store
+Thumbs.db
