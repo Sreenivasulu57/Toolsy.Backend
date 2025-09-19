@@ -1,3 +1,4 @@
-Add-Migration InitialCreate -Context ApplicationDbContext -Project VSC.Toolsy.Repositories -StartupProject VSC.Toolsy.Server
+Tools > PM console > Select default package as .Repository 
 
+Add-Migration InitialCreate -Context ApplicationDbContext -Project VSC.Toolsy.Repositories -StartupProject VSC.Toolsy.Server
 Update-Database -Context ApplicationDbContext -Project VSC.Toolsy.Repositories -StartupProject VSC.Toolsy.Server

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VSC.Toolsy.Common.Models;
+using VSC.Toolsy.Common.Models.CoreEntites;
 
 
 namespace VSC.Toolsy.Repositories.Data
@@ -22,6 +22,8 @@ namespace VSC.Toolsy.Repositories.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
 
     }
 }
