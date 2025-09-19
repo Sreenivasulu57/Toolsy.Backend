@@ -1,37 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using VSC.Toolsy.Repositories.Data;
+using VSC.Toolsy.Server.Extensions;
+using VSC.Toolsy.Server.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.RegisterServices(builder.Configuration);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+WebApplication app = builder.Build();
 
-string connectionString =
-    builder
-    .Configuration
-    .GetConnectionString("DefaultConnection") ?? throw new Exception(" null in connectionString");
+app.UseApiDefaults();
 
-//dotnet ef migrations add InitialCreate --context ApplicationDbContext
-//dotnet ef database update --context ApplicationDbContext
-
-
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options =>
-    options
-    .UseMySql(connectionString,
-        ServerVersion.AutoDetect(connectionString))
-    .LogTo(Console.WriteLine, LogLevel.Information)
-    .EnableSensitiveDataLogging()
-
-    );
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
