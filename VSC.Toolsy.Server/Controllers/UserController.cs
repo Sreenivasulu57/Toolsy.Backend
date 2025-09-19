@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VSC.Toolsy.Common.Exceptions;
+using VSC.Toolsy.Common.Interfaces;
+using VSC.Toolsy.Common.Models.CoreEntites;
 
 namespace VSC.Toolsy.Server.Controllers
 {
@@ -7,18 +8,18 @@ namespace VSC.Toolsy.Server.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
 
         [HttpGet("getById/{id}")]
-        public IActionResult getById(int id)
+        public async Task<IActionResult> getById(int id)
         {
-
-            if (id > 10)
-            {
-                throw new UserNotFoundException($"thw user with this id {id} not found");
-            }
-
-            return Ok(id);
-
+            User userFromDb = await _userService.GetByIdAsync(id);
+            return Ok(userFromDb);
         }
 
     }

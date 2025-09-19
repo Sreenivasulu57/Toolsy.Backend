@@ -16,7 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\VSC.Toolsy.Repositories\VSC.Toolsy.Repositories.csproj" />
+	  <ProjectReference Include="..\VSC.Toolsy.Services\VSC.Toolsy.Services.csproj" />
 	</ItemGroup>
 
 </Project>
