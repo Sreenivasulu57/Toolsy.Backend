@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VSC.Toolsy.Repositories\VSC.Toolsy.Repositories.csproj" />
+  </ItemGroup>
+
 </Project>
