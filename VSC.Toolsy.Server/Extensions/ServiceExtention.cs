@@ -12,7 +12,10 @@ namespace VSC.Toolsy.Server.Extensions
         public static void RegisterServices(this IServiceCollection services, ConfigurationManager configurationManager)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+
 
             services.AddControllers();
             services.AddEndpointsApiExplorer();
