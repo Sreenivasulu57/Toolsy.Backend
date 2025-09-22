@@ -9,18 +9,18 @@ namespace VSC.Toolsy.Server.Controllers
     [Route("api/v1/admin")]
     public class AdminController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAdminService _adminService;
 
-        public AdminController(IUserService userService)
+        public AdminController(IAdminService adminService)
         {
-            _userService = userService;
+            _adminService = adminService;
 
         }
 
         [HttpGet("users")]
         public async Task<IActionResult> GetAllUsers()
         {
-            List<AdminUserDto> users = await _userService.GetAllUsersForAdminAsync();
+            List<AdminUserDto> users = await _adminService.GetAllUsersForAdminAsync();
             return Ok(ApiResponse<List<AdminUserDto>>.SuccessResponse(
                 users,
                 "Successfully fetched all users for the admin."
@@ -28,9 +28,9 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpGet("users/verified")]
-        public async Task<IActionResult> GetAllVerifiedUsers() {
-
-            List<AdminUserDto> users = (await _userService.GetAllUsersForAdminAsync())
+        public async Task<IActionResult> GetAllVerifiedUsers()
+        {
+            List<AdminUserDto> users = (await _adminService.GetAllUsersForAdminAsync())
                 .Where(u => u.VerificationStatus.Equals(VerificationStatus.Verified))
                 .ToList();
 
@@ -38,14 +38,12 @@ namespace VSC.Toolsy.Server.Controllers
                 users,
                 "Successfully fetched all users for the admin."
             ));
-
         }
 
-        [HttpGet("users/unverified")]
-        public async Task<IActionResult> GetAllUnverifiedUsers()
+        [HttpGet("users/unVerified")]
+        public async Task<IActionResult> GetAllUnVerifiedUsers()
         {
-
-            List<AdminUserDto> users = (await _userService.GetAllUsersForAdminAsync())
+            List<AdminUserDto> users = (await _adminService.GetAllUsersForAdminAsync())
                 .Where(u => u.VerificationStatus.Equals(VerificationStatus.Pending))
                 .ToList();
 
@@ -53,13 +51,13 @@ namespace VSC.Toolsy.Server.Controllers
                 users,
                 "Successfully fetched all users for the admin."
             ));
-
         }
+
         [HttpGet("users/deleted")]
         public async Task<IActionResult> GetAllDeletedUsers()
         {
 
-            List<AdminUserDto> users = (await _userService.GetAllUsersForAdminAsync())
+            List<AdminUserDto> users = (await _adminService.GetAllUsersForAdminAsync())
                 .Where(u => u.IsDeleted)
                 .ToList();
 
@@ -70,28 +68,32 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPut("users/{id}/approve")]
-        public async Task<IActionResult> ApproveUserAccount(int id) {
+        [HttpPut("profiles/approve")]
+        public async Task<IActionResult> ApproveProfileAccount(string email)
+        {
 
-            bool result = await _userService.ApproveUserAccountAsync(id);
+            bool result = await _adminService.ApproveProfileAccountAsync(email);
 
             return Ok(ApiResponse<bool>.SuccessResponse(result, "Approve Account"));
-            
-        }
-        [HttpPut("users/{id}/delete")]
-        public async Task<IActionResult> DeleteUserAccount(int id) {
 
-           bool result = await _userService.DeleteUserAccountAsync(id);
-
-           return Ok(ApiResponse<bool>.SuccessResponse(result, "Approve Account"));
         }
 
-        [HttpGet("/users/{id}")]
-        public async Task<IActionResult> GetUserById(int id) {
+        [HttpPut("users/deleteByEmail")]
+        public async Task<IActionResult> DeleteUserAccount(string email)
+        {
 
-            AdminUserDto adminUserDto =await  _userService.GetUserById(id);
+            bool result = await _adminService.DeleteUserAccountAsync(email);
 
-            return Ok(ApiResponse<AdminUserDto>.SuccessResponse(adminUserDto, "GetUserById"));
+            return Ok(ApiResponse<bool>.SuccessResponse(result, "Approve Account"));
+        }
+
+        [HttpGet("users/getByEmail")]
+        public async Task<IActionResult> GetUserById(string email)
+        {
+
+            AdminUserDto adminUserDto = await _adminService.GetUserByEmailAsync(email);
+
+            return Ok(ApiResponse<AdminUserDto>.SuccessResponse(adminUserDto, "GetUserByEmailAsync"));
         }
     }
 }

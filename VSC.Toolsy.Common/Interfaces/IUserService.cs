@@ -6,10 +6,11 @@ namespace VSC.Toolsy.Common.Interfaces
 {
     public interface IUserService
     {
-        Task<bool> ApproveUserAccountAsync(int id);
-        Task<bool> DeleteUserAccountAsync(int id);
-        Task<List<AdminUserDto>> GetAllUsersForAdminAsync();
-        Task<AdminUserDto> GetUserById(int id);
-        public Task<User> SaveAsync(RegisterUserDto registerUserDto);
+        Task<Profile> DeleteUserByEmailAsync(string email);
+        Task<List<Profile>> GetAllUserAsync();
+        Task<Profile> GetByEmailAsync(string email);
+        public Task<Profile> SaveAsync(RegisterUserDto registerUserDto);
+        Task<Profile> UpdateUser(UserUpdateDTO userUpdateDTO, string email);
+        public Task<int> UpdateUserAsync(Profile userFromDb);
     }
 }

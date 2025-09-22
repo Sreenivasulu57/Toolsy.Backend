@@ -1,5 +1,4 @@
-﻿using System.Data;
-using VSC.Toolsy.Common.DTOs.Requests;
+﻿using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
@@ -11,97 +10,49 @@ namespace VSC.Toolsy.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IProfileRepository _profileRepository;
 
-
-        public UserService(IUserRepository userRepository)
+        public UserService(IProfileRepository profileRepository)
         {
-            _userRepository = userRepository;
+            _profileRepository = profileRepository;
         }
 
-        public async Task<bool> ApproveUserAccountAsync(int id)
-        {
-            User userFromDb = await _userRepository.GetByIdAsync(id);
-
-            if (userFromDb.VerificationStatus == VerificationStatus.Verified)
-            {
-                return true; 
-            }
-
-            userFromDb.VerificationStatus = VerificationStatus.Verified;
-            userFromDb.UpdatedAt = DateTime.UtcNow;
-            userFromDb.UpdatedBy = "Admin";
-
-            _userRepository.Update(userFromDb);
-
-            int result = await _userRepository.SaveChangesAsync();
-
-            return result > 0;
-        }
-
-        public async Task<bool> DeleteUserAccountAsync(int id)
+        public async Task<Profile> DeleteUserByEmailAsync(string email)
         {
             DateTime now = DateTime.UtcNow;
 
-            User userFromDb = await _userRepository.GetByIdWithRolesAsync(id);
+            Profile userFromDb = await GetByEmailAsync(email);
 
             if (userFromDb.IsDeleted)
             {
-                return true; 
+                return userFromDb;
             }
 
+            userFromDb.IsActive = false;
             userFromDb.IsDeleted = true;
             userFromDb.DeletedAt = now;
-            userFromDb.DeletedBy = "Admin"; //Todo Take From Admin
+            userFromDb.DeletedBy = Role.User.ToString();
 
-            foreach (UserRole ur in userFromDb.UserRoles) {
-                ur.IsActive = false;
-                ur.UpdatedAt = now;
+            _profileRepository.Update(userFromDb);
+            int result = await _profileRepository.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return userFromDb;
             }
-
-            _userRepository.Update(userFromDb);
-
-            int result = await _userRepository.SaveChangesAsync();
-
-            return result > 0;
-            
+            throw new Exception("Internal Server Error");
         }
 
-        //For Admin view
-        public async Task<List<AdminUserDto>>  GetAllUsersForAdminAsync()
-            => await _userRepository.GetAllUsersForAdminAsync();
+        public async Task<List<Profile>> GetAllUserAsync()
+            => await _profileRepository.GetAllUserAsync();
 
-        public async Task<AdminUserDto> GetUserById(int id)
+        public async Task<Profile> GetByEmailAsync(string email)
+            => await _profileRepository.GetByEmailAsync(email);
+
+        public async Task<Profile> SaveAsync(RegisterUserDto registerUserDto)
         {
-            User userFromDb = await _userRepository.GetByIdWithRolesAsync(id);
-
-            return new AdminUserDto
+            Profile user = new Profile
             {
-                UserId = userFromDb.Id,
-                FirstName = userFromDb.FirstName,
-                LastName = userFromDb.LastName,
-                Email = userFromDb.Email,
-                PhoneNumber = userFromDb.PhoneNumber ?? string.Empty,
-                ProfileImageUrl = userFromDb.ProfileImageUrl ?? string.Empty,
-                IsDeleted = userFromDb.IsDeleted,
-                Status = userFromDb.Status,
-                VerificationStatus = userFromDb.VerificationStatus,
-                EmailVerifiedAt = userFromDb.EmailVerifiedAt,
-                PhoneVerifiedAt = userFromDb.PhoneVerifiedAt,
-                Roles = userFromDb.UserRoles.Select(ur => new RoleDto
-                {
-                    RoleName = ur.Role.Name,
-                    IsActive = ur.IsActive
-                }).ToList()
-            };
-
-        } 
-        public async Task<User> SaveAsync(RegisterUserDto registerUserDto)
-        {
-            User user = new
-       User
-            {
-
                 FirstName = registerUserDto.FirstName,
                 LastName = registerUserDto.LastName,
                 Email = registerUserDto.Email,
@@ -109,13 +60,45 @@ namespace VSC.Toolsy.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password),
                 ProfileImageUrl = registerUserDto.ProfileImageUrl,
                 CreatedBy = registerUserDto.Email,
+                Role = Role.User
             };
 
-            await _userRepository.SaveAsync(user);
+            await _profileRepository.SaveAsync(user);
 
-            await _userRepository.SaveChangesAsync();
+            await _profileRepository.SaveChangesAsync();
 
             return user;
+        }
+
+        public async Task<Profile> UpdateUser(UserUpdateDTO userUpdateDTO, string email)
+        {
+            Profile userFromDb = await GetByEmailAsync(email);
+
+            userFromDb.FirstName = userUpdateDTO.FirstName;
+            userFromDb.LastName = userUpdateDTO.LastName;
+            userFromDb.PhoneNumber = userUpdateDTO.PhoneNumber;
+            userFromDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userUpdateDTO.Password);
+            userFromDb.ProfileImageUrl = userUpdateDTO.ProfileImageUrl;
+
+            userFromDb.UpdatedBy = Role.User.ToString();
+            userFromDb.UpdatedAt = DateTime.UtcNow;
+
+            _profileRepository.Update(userFromDb);
+            int result = await _profileRepository.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return userFromDb;
+            }
+
+            throw new Exception("Internal Server Error");
+
+        }
+
+        public async Task<int> UpdateUserAsync(Profile userFromDb)
+        {
+            _profileRepository.Update(userFromDb);
+            return await _profileRepository.SaveChangesAsync();
         }
     }
 }

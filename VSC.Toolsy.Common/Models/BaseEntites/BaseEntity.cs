@@ -10,7 +10,7 @@ namespace VSC.Toolsy.Common.Models.BaseEntites
     public abstract class BaseEntity
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = new Guid();
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

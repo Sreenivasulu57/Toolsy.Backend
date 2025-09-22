@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VSC.Toolsy.Common.Enums;
+﻿using VSC.Toolsy.Common.Enums;
 
 namespace VSC.Toolsy.Common.DTOs.Responses
 {
     public class AdminUserDto
     {
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -20,7 +15,7 @@ namespace VSC.Toolsy.Common.DTOs.Responses
         public VerificationStatus VerificationStatus { get; set; }
         public DateTime? EmailVerifiedAt { get; set; }
         public DateTime? PhoneVerifiedAt { get; set; }
-        public List<RoleDto> Roles { get; set; }
+
     }
 
 }

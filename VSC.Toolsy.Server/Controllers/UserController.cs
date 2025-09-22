@@ -18,17 +18,45 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveUser([FromBody]RegisterUserDto dto)
+        public async Task<IActionResult> SaveUser([FromBody] RegisterUserDto dto)
         {
 
-            if(dto==null)
+            if (dto == null)
             {
-                return  BadRequest(ApiResponse<User>.FailureResponse("Enter the required data"));
+                return BadRequest(ApiResponse<Profile>.FailureResponse("Enter the required data"));
             }
 
-            User user=await _userService.SaveAsync(dto);
+            Profile userFromDb = await _userService.SaveAsync(dto);
 
-            return Ok(ApiResponse<User>.SuccessResponse(user, "Added Succesfully"));
+            return Ok(ApiResponse<Profile>.SuccessResponse(userFromDb, "Added Succesfully"));
         }
+
+        [HttpGet("getByEmail")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            Profile userFromDb = await _userService.GetByEmailAsync(email);
+
+            return Ok(ApiResponse<Profile>.SuccessResponse(userFromDb, "GetUserByEmail"));
+        }
+
+        [HttpPut("deleteByEmail")]
+        public async Task<IActionResult> DeleteUserByEmail(string email)
+        {
+
+            Profile userFromDb = await _userService.DeleteUserByEmailAsync(email);
+
+            return Ok(ApiResponse<Profile>.SuccessResponse(userFromDb, "DeleteUserByEmail"));
+
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO, string email)
+        {
+
+            Profile userFromDb = await _userService.UpdateUser(userUpdateDTO, email);
+
+            return Ok(ApiResponse<Profile>.SuccessResponse(userFromDb, "UpdateUser"));
+        }
+
     }
 }
