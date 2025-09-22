@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VSC.Toolsy.Common.DTOs
+namespace VSC.Toolsy.Common.DTOs.Responses
 {
     public class ApiResponse<T>
     {

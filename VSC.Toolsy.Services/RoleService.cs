@@ -1,4 +1,4 @@
-﻿using VSC.Toolsy.Common;
+﻿using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
 using VSC.Toolsy.Repositories.implementation;

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VSC.Toolsy.Common.Models.CoreEntites;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace VSC.Toolsy.Common
+namespace VSC.Toolsy.Common.DTOs.Requests
 {
     public class RoleUpdateRequestDTO
     {
