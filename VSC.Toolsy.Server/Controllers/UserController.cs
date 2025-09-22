@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VSC.Toolsy.Common.DTOs;
+using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
 
 namespace VSC.Toolsy.Server.Controllers
 {
-    [Route("api/user")]
+    [Route("api/v1/users")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -15,12 +17,18 @@ namespace VSC.Toolsy.Server.Controllers
             _userService = userService;
         }
 
-        [HttpGet("getById/{id}")]
-        public async Task<IActionResult> getById(int id)
+        [HttpPost]
+        public async Task<IActionResult> SaveUser([FromBody]RegisterUserDto dto)
         {
-            User userFromDb = await _userService.GetByIdAsync(id);
-            return Ok(userFromDb);
-        }
 
+            if(dto==null)
+            {
+                return  BadRequest(ApiResponse<User>.FailureResponse("Enter the required data"));
+            }
+
+            User user=await _userService.SaveAsync(dto);
+
+            return Ok(ApiResponse<User>.SuccessResponse(user, "Added Succesfully"));
+        }
     }
 }
