@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using VSC.Toolsy.Common.Models.BaseEntites;
 using VSC.Toolsy.Common.Enums;
+using VSC.Toolsy.Common.Models.BaseEntites;
 
 namespace VSC.Toolsy.Common.Models.CoreEntites
 {
-    public class User : AuditableEntity
+    public class Profile : AuditableEntity
     {
         [Required]
         [StringLength(100)]
@@ -28,6 +28,8 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
 
         public string? ProfileImageUrl { get; set; }
 
+        public bool IsActive { get; set; } = true;
+
         [Required]
         public AccountStatus Status { get; set; } = AccountStatus.Pending;
 
@@ -38,6 +40,7 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
 
         public DateTime? PhoneVerifiedAt { get; set; }
 
-        public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        public Role Role { get; set; } = Role.User;
+
     }
 }
