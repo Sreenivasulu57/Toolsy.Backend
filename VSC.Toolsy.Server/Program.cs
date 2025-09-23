@@ -1,5 +1,4 @@
 using VSC.Toolsy.Server.Extensions;
-using VSC.Toolsy.Server.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using VSC.Toolsy.Common.DTOs.Requests;
+using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Models.CoreEntites;
 
 namespace VSC.Toolsy.Common.Interfaces
 {
     public interface IUserService
     {
-        Task<User> GetByIdAsync(int id);
+        Task<Profile> DeleteUserByEmailAsync(string email);
+        Task<List<Profile>> GetAllUserAsync();
+        Task<Profile> GetByEmailAsync(string email);
+        public Task<Profile> SaveAsync(RegisterUserDto registerUserDto);
+        Task<Profile> UpdateUser(UserUpdateDTO userUpdateDTO, string email);
+        public Task<int> UpdateUserAsync(Profile userFromDb);
     }
 }

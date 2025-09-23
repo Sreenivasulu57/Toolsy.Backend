@@ -21,9 +21,8 @@ namespace VSC.Toolsy.Repositories.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
 
+        public DbSet<Owner> Owners { get; set; }
     }
 }

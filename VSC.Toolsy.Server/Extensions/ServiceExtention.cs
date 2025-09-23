@@ -4,6 +4,7 @@ using VSC.Toolsy.Repositories.Data;
 using VSC.Toolsy.Repositories.Interfaces;
 using VSC.Toolsy.Services;
 using VSC.Toolsy.Repositories.implementation;
+using VSC.Toolsy.Repositories.Implementation;
 
 namespace VSC.Toolsy.Server.Extensions
 {
@@ -12,7 +13,11 @@ namespace VSC.Toolsy.Server.Extensions
         public static void RegisterServices(this IServiceCollection services, ConfigurationManager configurationManager)
         {
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IOwnerRepository, OwnerRepository>();
+            services.AddScoped<IOwnerService, OwnerService>();
+
 
             services.AddControllers();
             services.AddEndpointsApiExplorer();
