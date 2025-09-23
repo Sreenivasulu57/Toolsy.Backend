@@ -7,11 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\VSC.Toolsy.Repositories\VSC.Toolsy.Repositories.csproj" />
+	  <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+		<ProjectReference Include="..\VSC.Toolsy.Repositories\VSC.Toolsy.Repositories.csproj" />
 	</ItemGroup>
 
 </Project>
