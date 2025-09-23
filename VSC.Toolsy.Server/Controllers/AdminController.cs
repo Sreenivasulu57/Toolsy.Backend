@@ -19,9 +19,9 @@ namespace VSC.Toolsy.Server.Controllers
 
         [HttpGet("users")]
         public async Task<IActionResult> GetAllUsers()
-        {
+        { 
             List<AdminUserDto> users = await _adminService.GetAllUsersForAdminAsync();
-            return Ok(ApiResponse<List<AdminUserDto>>.SuccessResponse(
+            return Ok(ApiResponseDto<List<AdminUserDto>>.SuccessResponse(
                 users,
                 "Successfully fetched all users for the admin."
             ));
@@ -34,7 +34,7 @@ namespace VSC.Toolsy.Server.Controllers
                 .Where(u => u.VerificationStatus.Equals(VerificationStatus.Verified))
                 .ToList();
 
-            return Ok(ApiResponse<List<AdminUserDto>>.SuccessResponse(
+            return Ok(ApiResponseDto<List<AdminUserDto>>.SuccessResponse(
                 users,
                 "Successfully fetched all users for the admin."
             ));
@@ -47,7 +47,7 @@ namespace VSC.Toolsy.Server.Controllers
                 .Where(u => u.VerificationStatus.Equals(VerificationStatus.Pending))
                 .ToList();
 
-            return Ok(ApiResponse<List<AdminUserDto>>.SuccessResponse(
+            return Ok(ApiResponseDto<List<AdminUserDto>>.SuccessResponse(
                 users,
                 "Successfully fetched all users for the admin."
             ));
@@ -61,7 +61,7 @@ namespace VSC.Toolsy.Server.Controllers
                 .Where(u => u.IsDeleted)
                 .ToList();
 
-            return Ok(ApiResponse<List<AdminUserDto>>.SuccessResponse(
+            return Ok(ApiResponseDto<List<AdminUserDto>>.SuccessResponse(
                 users,
                 "Successfully fetched all users for the admin."
             ));
@@ -74,7 +74,7 @@ namespace VSC.Toolsy.Server.Controllers
 
             bool result = await _adminService.ApproveProfileAccountAsync(email);
 
-            return Ok(ApiResponse<bool>.SuccessResponse(result, "Approve Account"));
+            return Ok(ApiResponseDto<bool>.SuccessResponse(result, "Approve Account"));
 
         }
 
@@ -84,7 +84,7 @@ namespace VSC.Toolsy.Server.Controllers
 
             bool result = await _adminService.DeleteUserAccountAsync(email);
 
-            return Ok(ApiResponse<bool>.SuccessResponse(result, "Approve Account"));
+            return Ok(ApiResponseDto<bool>.SuccessResponse(result, "Approve Account"));
         }
 
         [HttpGet("users/getByEmail")]
@@ -93,7 +93,7 @@ namespace VSC.Toolsy.Server.Controllers
 
             AdminUserDto adminUserDto = await _adminService.GetUserByEmailAsync(email);
 
-            return Ok(ApiResponse<AdminUserDto>.SuccessResponse(adminUserDto, "GetUserByEmailAsync"));
+            return Ok(ApiResponseDto<AdminUserDto>.SuccessResponse(adminUserDto, "GetUserByEmailAsync"));
         }
     }
 }

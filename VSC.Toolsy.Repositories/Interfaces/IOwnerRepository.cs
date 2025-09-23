@@ -1,0 +1,8 @@
+﻿using VSC.Toolsy.Common.Models.CoreEntites;
+
+namespace VSC.Toolsy.Repositories.Interfaces
+{
+    public interface IOwnerRepository : IRepository<Owner>
+    {
+    }
+}

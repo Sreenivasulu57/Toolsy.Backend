@@ -23,12 +23,12 @@ namespace VSC.Toolsy.Server.Controllers
 
             if (dto == null)
             {
-                return BadRequest(ApiResponse<Profile>.FailureResponse("Enter the required data"));
+                return BadRequest(ApiResponseDto<Profile>.FailureResponse("Enter the required data"));
             }
 
             Profile userFromDb = await _userService.SaveAsync(dto);
 
-            return Ok(ApiResponse<Profile>.SuccessResponse(userFromDb, "Added Succesfully"));
+            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "Added Succesfully"));
         }
 
         [HttpGet("getByEmail")]
@@ -36,7 +36,7 @@ namespace VSC.Toolsy.Server.Controllers
         {
             Profile userFromDb = await _userService.GetByEmailAsync(email);
 
-            return Ok(ApiResponse<Profile>.SuccessResponse(userFromDb, "GetUserByEmail"));
+            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "GetUserByEmail"));
         }
 
         [HttpPut("deleteByEmail")]
@@ -45,7 +45,7 @@ namespace VSC.Toolsy.Server.Controllers
 
             Profile userFromDb = await _userService.DeleteUserByEmailAsync(email);
 
-            return Ok(ApiResponse<Profile>.SuccessResponse(userFromDb, "DeleteUserByEmail"));
+            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "DeleteUserByEmail"));
 
         }
 
@@ -55,7 +55,7 @@ namespace VSC.Toolsy.Server.Controllers
 
             Profile userFromDb = await _userService.UpdateUser(userUpdateDTO, email);
 
-            return Ok(ApiResponse<Profile>.SuccessResponse(userFromDb, "UpdateUser"));
+            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "UpdateUser"));
         }
 
     }

@@ -23,5 +23,6 @@ namespace VSC.Toolsy.Repositories.Data
 
         public DbSet<Profile> Profiles { get; set; }
 
+        public DbSet<Owner> Owners { get; set; }
     }
 }

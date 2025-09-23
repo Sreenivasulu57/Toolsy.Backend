@@ -22,6 +22,34 @@ namespace VSC.Toolsy.Repositories.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Owner", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("BusinessDescription")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("BusinessName")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("BusinessRegistrationNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("Owners");
+                });
+
             modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Profile", b =>
                 {
                     b.Property<Guid>("Id")
@@ -96,6 +124,17 @@ namespace VSC.Toolsy.Repositories.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Profiles");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Owner", b =>
+                {
+                    b.HasOne("VSC.Toolsy.Common.Models.CoreEntites.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Profile");
                 });
 #pragma warning restore 612, 618
         }
