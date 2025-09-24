@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using VSC.Toolsy.Common.Enums;
 
 namespace VSC.Toolsy.Common.DTOs.Requests
 {
@@ -19,6 +20,12 @@ namespace VSC.Toolsy.Common.DTOs.Requests
         [MinLength(10, ErrorMessage = "Phone number must be 10")]
         [MaxLength(10, ErrorMessage = "Phone number must be 10")]
         public string? PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "DateOfBirth required")]
+        public required DateTime DateOfBirth { get; set; }
+
+        [Required(ErrorMessage = "Gender required")]
+        public required Gender Gender { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long")]

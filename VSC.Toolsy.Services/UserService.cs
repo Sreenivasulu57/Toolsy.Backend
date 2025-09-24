@@ -1,5 +1,4 @@
 ﻿using VSC.Toolsy.Common.DTOs.Requests;
-using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
@@ -57,6 +56,8 @@ namespace VSC.Toolsy.Services
                 LastName = registerUserDto.LastName,
                 Email = registerUserDto.Email,
                 PhoneNumber = registerUserDto.PhoneNumber,
+                DateOfBirth = registerUserDto.DateOfBirth,
+                Gender = registerUserDto.Gender,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password),
                 ProfileImageUrl = registerUserDto.ProfileImageUrl,
                 CreatedBy = registerUserDto.Email,
@@ -79,6 +80,7 @@ namespace VSC.Toolsy.Services
             userFromDb.PhoneNumber = userUpdateDTO.PhoneNumber;
             userFromDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userUpdateDTO.Password);
             userFromDb.ProfileImageUrl = userUpdateDTO.ProfileImageUrl;
+            userFromDb.DateOfBirth = userUpdateDTO.DateOfBirth;
 
             userFromDb.UpdatedBy = Role.User.ToString();
             userFromDb.UpdatedAt = DateTime.UtcNow;

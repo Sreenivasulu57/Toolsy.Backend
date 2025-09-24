@@ -17,6 +17,10 @@ namespace VSC.Toolsy.Server.Extensions
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IOwnerRepository, OwnerRepository>();
             services.AddScoped<IOwnerService, OwnerService>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IProfileService, ProfileService>();
+
 
 
             services.AddControllers();

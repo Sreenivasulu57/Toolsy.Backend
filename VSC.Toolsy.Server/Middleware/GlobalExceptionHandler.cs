@@ -1,6 +1,8 @@
-﻿using System.Net;
+﻿using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using Newtonsoft.Json;
 using VSC.Toolsy.Common.DTOs.Responses;
+using System.Net;
 using VSC.Toolsy.Common.Exceptions;
 
 namespace VSC.Toolsy.Server.Middleware
@@ -31,6 +33,11 @@ namespace VSC.Toolsy.Server.Middleware
                     case UserNotFoundException userNotFoundException:
 
                         response.StatusCode = (int)HttpStatusCode.NotFound;
+                        break;
+                    case DbUpdateException dbEx
+
+                        when dbEx.InnerException is MySqlException mysqlEx && mysqlEx.Number == 1062:
+                        response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
                     default:
 
