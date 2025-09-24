@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using VSC.Toolsy.Common.DTOs.Requests;
+﻿using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
@@ -31,6 +30,8 @@ namespace VSC.Toolsy.Services
                 LastName = ownerRequestDto.LastName,
                 Email = ownerRequestDto.Email,
                 PhoneNumber = ownerRequestDto.PhoneNumber,
+                DateOfBirth = ownerRequestDto.DateOfBirth,
+                Gender = ownerRequestDto.Gender,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(ownerRequestDto.Password),
                 ProfileImageUrl = ownerRequestDto.ProfileImageUrl,
                 Role = Role.Owner,
