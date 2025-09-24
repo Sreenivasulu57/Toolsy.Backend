@@ -18,8 +18,10 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpGet("users")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // OK - 200 status code 
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
         public async Task<IActionResult> GetAllUsers()
-        { 
+        {
             List<AdminUserDto> users = await _adminService.GetAllUsersForAdminAsync();
             return Ok(ApiResponseDto<List<AdminUserDto>>.SuccessResponse(
                 users,
@@ -28,6 +30,9 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpGet("users/verified")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // OK - 200 status code 
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not Found - 404 status code
         public async Task<IActionResult> GetAllVerifiedUsers()
         {
             List<AdminUserDto> users = (await _adminService.GetAllUsersForAdminAsync())
@@ -38,9 +43,17 @@ namespace VSC.Toolsy.Server.Controllers
                 users,
                 "Successfully fetched all users for the admin."
             ));
+
+            if (users == null || users.Count == 0)
+            {
+                return NotFound(ApiResponseDto<string>.FailureResponse("No verified users found."));
+            }
         }
 
-        [HttpGet("users/unVerified")]
+        [HttpGet("users/unverified")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // OK - 200 status code 
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not Found - 404 status code
         public async Task<IActionResult> GetAllUnVerifiedUsers()
         {
             List<AdminUserDto> users = (await _adminService.GetAllUsersForAdminAsync())
@@ -51,9 +64,17 @@ namespace VSC.Toolsy.Server.Controllers
                 users,
                 "Successfully fetched all users for the admin."
             ));
+
+            if (users == null || users.Count == 0)
+            {
+                return NotFound(ApiResponseDto<string>.FailureResponse("No Unverified users found."));
+            }
         }
 
         [HttpGet("users/deleted")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // OK - 200 status code
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not Found - 404 status code
         public async Task<IActionResult> GetAllDeletedUsers()
         {
 
@@ -66,9 +87,19 @@ namespace VSC.Toolsy.Server.Controllers
                 "Successfully fetched all users for the admin."
             ));
 
+            if (users == null || users.Count == 0)
+            {
+                return NotFound(ApiResponseDto<string>.FailureResponse("No Deleted users found."));
+            }
+
         }
 
         [HttpPut("profiles/approve")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // OK - 200 status code
+        [ProducesResponseType(StatusCodes.Status406NotAcceptable)] // NotAcceptable - 406 status code
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         public async Task<IActionResult> ApproveProfileAccount(string email)
         {
 
@@ -76,24 +107,57 @@ namespace VSC.Toolsy.Server.Controllers
 
             return Ok(ApiResponseDto<bool>.SuccessResponse(result, "Approve Account"));
 
+            if (!result)
+            {
+                return NotFound(ApiResponseDto<string>.FailureResponse("User not found or could not be approved."));
+            }
+
+            if (email == null)
+            {
+                return BadRequest(ApiResponseDto<string>.FailureResponse("Email cannot be empty"));
+            }
         }
 
-        [HttpPut("users/deleteByEmail")]
+        [HttpPut("user/delete-by-email")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // OK - 200 status code
+        [ProducesResponseType(StatusCodes.Status406NotAcceptable)] // NotAcceptable - 406 status code
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         public async Task<IActionResult> DeleteUserAccount(string email)
         {
 
             bool result = await _adminService.DeleteUserAccountAsync(email);
 
             return Ok(ApiResponseDto<bool>.SuccessResponse(result, "Approve Account"));
+
+            if (!result)
+            {
+                return NotFound(ApiResponseDto<string>.FailureResponse("User not found or could not be deleted."));
+            }
+            if (email == null)
+            {
+                return BadRequest(ApiResponseDto<string>.FailureResponse("Email cannot be empty"));
+            }
+
         }
 
-        [HttpGet("users/getByEmail")]
-        public async Task<IActionResult> GetUserById(string email)
+        [HttpGet("users/email")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // OK - 200 status code
+        [ProducesResponseType(StatusCodes.Status406NotAcceptable)] // NotAcceptable - 406 status code
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
+        public async Task<IActionResult> GetUserByEmail(string email)
         {
 
             AdminUserDto adminUserDto = await _adminService.GetUserByEmailAsync(email);
 
             return Ok(ApiResponseDto<AdminUserDto>.SuccessResponse(adminUserDto, "GetUserByEmailAsync"));
+
+            if (email == null)
+            {
+                return BadRequest(ApiResponseDto<string>.FailureResponse("Email cannot be empty"));
+            }
         }
     }
 }
