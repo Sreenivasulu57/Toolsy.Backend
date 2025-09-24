@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
+using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Exceptions;
 
 namespace VSC.Toolsy.Server.Middleware
@@ -37,7 +38,7 @@ namespace VSC.Toolsy.Server.Middleware
                         break;
                 }
 
-                string result = JsonConvert.SerializeObject(new { Exception = e.GetType().Name, Message = e.Message });
+                string result = JsonConvert.SerializeObject(ApiResponseDto<string>.FailureResponse(e.Message));
                 await response.WriteAsync(result);
 
             }

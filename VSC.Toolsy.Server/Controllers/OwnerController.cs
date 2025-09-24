@@ -18,8 +18,15 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(typeof(ApiResponseDto<Owner>), StatusCodes.Status200OK)] // OK - 200 status code
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         public async Task<IActionResult> RegisterOwner([FromBody] OwnerRequestDto ownerRequestDto)
         {
+            if (ownerRequestDto == null)
+            {
+                return BadRequest(ApiResponseDto<Owner>.FailureResponse("Enter the required data"));
+            }
 
             Owner ownerFromDb = await _ownerService.RegisterOwner(ownerRequestDto);
 
