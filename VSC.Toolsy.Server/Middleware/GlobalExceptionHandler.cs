@@ -31,6 +31,7 @@ namespace VSC.Toolsy.Server.Middleware
                 switch (e)
                 {
                     case UserNotFoundException userNotFoundException:
+                    case OwnerNotFoundException ownerNotFoundException:
 
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;

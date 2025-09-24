@@ -1,4 +1,5 @@
 ﻿using VSC.Toolsy.Common.DTOs.Requests;
+using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
@@ -11,12 +12,49 @@ namespace VSC.Toolsy.Services
 
         private readonly IOwnerRepository _ownerRepository;
         private readonly IProfileRepository _profileRepository;
-
-        public OwnerService(IOwnerRepository ownerRepository, IProfileRepository profileRepository)
+        private readonly IProfileService _profileService;
+        public OwnerService(IOwnerRepository ownerRepository, IProfileRepository profileRepository, IProfileService profileService)
         {
 
             _ownerRepository = ownerRepository;
             _profileRepository = profileRepository;
+            _profileService = profileService;
+
+        }
+
+        public async Task<OwnerResponseDto> GetOwnerByEmailAsync(string email)
+        {
+            Profile profileFromDb = await _profileService.GetProfileWithAddressByEmailAsync(email);
+
+            Owner ownerFromDb =  await _ownerRepository.GetByProfileId(profileFromDb.Id);
+
+            OwnerResponseDto ownerResponseDto = new OwnerResponseDto
+            {
+                ProfileId = profileFromDb.Id,
+                FirstName = profileFromDb.FirstName,
+                LastName = profileFromDb.LastName,
+                Email = profileFromDb.Email,
+                PhoneNumber = profileFromDb.PhoneNumber,
+                DateOfBirth = profileFromDb.DateOfBirth,
+                Gender = profileFromDb.Gender,
+                ProfileImageUrl = profileFromDb.ProfileImageUrl,
+                IsActive = profileFromDb.IsActive,
+                Status = profileFromDb.Status,
+                VerificationStatus = profileFromDb.VerificationStatus,
+                EmailVerifiedAt = profileFromDb.EmailVerifiedAt,
+                PhoneVerifiedAt = profileFromDb.PhoneVerifiedAt,
+                Role = profileFromDb.Role,
+                Address = profileFromDb.Address,
+
+                OwnerId = ownerFromDb.Id,
+                BusinessName = ownerFromDb.BusinessName,
+                BusinessDescription = ownerFromDb.BusinessDescription,
+                BusinessRegistrationNumber = ownerFromDb.BusinessRegistrationNumber
+
+
+            };
+
+            return ownerResponseDto;
 
         }
 
