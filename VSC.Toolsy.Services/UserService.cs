@@ -10,10 +10,12 @@ namespace VSC.Toolsy.Services
     public class UserService : IUserService
     {
         private readonly IProfileRepository _profileRepository;
+        private readonly IProfileService _profileService;
 
-        public UserService(IProfileRepository profileRepository)
+        public UserService(IProfileRepository profileRepository, IProfileService profileService)
         {
             _profileRepository = profileRepository;
+            _profileService = profileService;
         }
 
         public async Task<Profile> DeleteUserByEmailAsync(string email)
@@ -44,6 +46,9 @@ namespace VSC.Toolsy.Services
 
         public async Task<List<Profile>> GetAllUserAsync()
             => await _profileRepository.GetAllUserAsync();
+
+        public async Task<Profile> GetProfileWithAddressByEmailAsync(string profileEmail)
+            => await _profileService.GetProfileWithAddressByEmailAsync(profileEmail);
 
         public async Task<Profile> GetByEmailAsync(string email)
             => await _profileRepository.GetByEmailAsync(email);
