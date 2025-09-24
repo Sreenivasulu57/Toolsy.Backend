@@ -20,5 +20,10 @@ namespace VSC.Toolsy.Repositories.implementation
             => await Query()
             .FirstOrDefaultAsync(p => p.Email.Equals(email)) ?? throw new UserNotFoundException($"User With This Email {email} Is Not Found");
 
+        public async Task<Profile> GetProfileWithAddressByEmailAsync(string email)
+            => await Query()
+            .Include(p => p.Address)
+            .FirstOrDefaultAsync(p => p.Email.Equals(email))?? throw new UserNotFoundException($"User With This Email {email} Is Not Found");
+
     }
 }

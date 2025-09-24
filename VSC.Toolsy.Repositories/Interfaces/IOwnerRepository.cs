@@ -4,5 +4,6 @@ namespace VSC.Toolsy.Repositories.Interfaces
 {
     public interface IOwnerRepository : IRepository<Owner>
     {
+        Task<Owner> GetByProfileId(Guid id);
     }
 }

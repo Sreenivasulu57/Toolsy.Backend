@@ -33,5 +33,18 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<Owner>.SuccessResponse(ownerFromDb, "Owner Account Created Successfully"));
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponseDto<Owner>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>),StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetOwnerByEmail([FromQuery]string email) {
+
+            OwnerResponseDto ownerResponseDto = await _ownerService.GetOwnerByEmailAsync(email);
+
+            return Ok(ApiResponseDto<OwnerResponseDto>.SuccessResponse(ownerResponseDto, "Owner fetched successfully."));
+
+        }
+
     }
 }

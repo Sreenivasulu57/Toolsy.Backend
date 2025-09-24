@@ -6,5 +6,6 @@ namespace VSC.Toolsy.Repositories.Interfaces
     {
         Task<List<Profile>> GetAllUserAsync();
         Task<Profile> GetByEmailAsync(string email);
+        Task<Profile> GetProfileWithAddressByEmailAsync(string email);
     }
 }

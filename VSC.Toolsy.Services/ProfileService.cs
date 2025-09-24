@@ -19,5 +19,8 @@ namespace VSC.Toolsy.Services
             return profile;
         }
 
+        public async Task<Profile> GetProfileWithAddressByEmailAsync(string email)
+            => await _profileRepository.GetProfileWithAddressByEmailAsync(email);
+        
     }
 }
