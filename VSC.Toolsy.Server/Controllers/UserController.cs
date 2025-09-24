@@ -34,7 +34,7 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "Added Succesfully"));
         }
 
-        [HttpGet("email")]
+        [HttpGet("by-email")]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
@@ -46,7 +46,7 @@ namespace VSC.Toolsy.Server.Controllers
                 return BadRequest(ApiResponseDto<string>.FailureResponse("Email is required."));
             }
 
-            Profile userFromDb = await _userService.GetByEmailAsync(email);
+            Profile userFromDb = await _userService.GetProfileWithAddressByEmailAsync(email);
 
             if (userFromDb == null)
             {
@@ -77,8 +77,6 @@ namespace VSC.Toolsy.Server.Controllers
             }
 
             return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "DeleteUserByEmail"));
-
-
         }
 
         [HttpPut("update")]

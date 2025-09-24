@@ -17,15 +17,15 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(ApiResponseDto<Address>),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponseDto<string>),StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ApiResponseDto<string>),StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponseDto<Address>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SaveAddressAsync([FromBody] AddressRegisterDto addressRegisterDto)
         {
-            Address address=await _addressService.SaveAddressAsync(addressRegisterDto);
+            Address address = await _addressService.SaveAddressAsync(addressRegisterDto);
 
-            return  Ok(ApiResponseDto<Address>.SuccessResponse(address, "Address added succesfully"));
+            return Ok(ApiResponseDto<Address>.SuccessResponse(address, "Address added succesfully"));
         }
     }
 }

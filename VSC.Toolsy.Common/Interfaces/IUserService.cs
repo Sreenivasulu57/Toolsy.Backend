@@ -10,6 +10,8 @@ namespace VSC.Toolsy.Common.Interfaces
         Task<Profile> GetByEmailAsync(string email);
         public Task<Profile> SaveAsync(RegisterUserDto registerUserDto);
         Task<Profile> UpdateUser(UserUpdateDTO userUpdateDTO, string email);
-        public Task<int> UpdateUserAsync(Profile userFromDb);
+        Task<int> UpdateUserAsync(Profile profile);
+        Task<Profile> GetProfileWithAddressByEmailAsync(string profileEmail);
+
     }
 }
