@@ -26,5 +26,9 @@ namespace VSC.Toolsy.Repositories.Data
         public DbSet<Address> Address { get; set; }
 
         public DbSet<Owner> Owners { get; set; }
+
+        public DbSet<Tool> Tools { get; set; }
+
+        public DbSet<ToolImage> ToolImages { get; set; }
     }
 }

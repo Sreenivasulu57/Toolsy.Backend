@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Models.BaseEntites;
 
 namespace VSC.Toolsy.Common.Models.CoreEntites
 {
+    [Table(name: "Profile")]
     public class Profile : AuditableEntity
     {
         [Required(ErrorMessage ="FirstName is required")]
@@ -50,7 +53,7 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
 
         public Role Role { get; set; } = Role.User;
 
-
+        [JsonIgnore]
         public Address? Address { get; set; }
 
     }
