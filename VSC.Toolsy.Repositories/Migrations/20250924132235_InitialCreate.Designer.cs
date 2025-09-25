@@ -12,7 +12,7 @@ using VSC.Toolsy.Repositories.Data;
 namespace VSC.Toolsy.Repositories.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250924050458_InitialCreate")]
+    [Migration("20250924132235_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -111,7 +111,7 @@ namespace VSC.Toolsy.Repositories.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("Owners");
+                    b.ToTable("Owner");
                 });
 
             modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Profile", b =>
@@ -195,7 +195,139 @@ namespace VSC.Toolsy.Repositories.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profiles");
+                    b.ToTable("Profile");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Tool", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("AvailabilityStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Brand")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Condition")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("DailyRate")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("HourlyRate")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int?>("ManufactureYear")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Model")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<decimal>("MonthlyRate")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("OperatorRequirements")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("RequiresOperator")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SafetyInstructions")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("SecurityDeposit")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<string>("SerialNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("WeeklyRate")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<decimal>("YearlyRate")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Tool");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.ToolImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("AltText")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("ToolId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ToolId");
+
+                    b.ToTable("ToolImage");
                 });
 
             modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Address", b =>
@@ -218,9 +350,39 @@ namespace VSC.Toolsy.Repositories.Migrations
                     b.Navigation("Profile");
                 });
 
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Tool", b =>
+                {
+                    b.HasOne("VSC.Toolsy.Common.Models.CoreEntites.Owner", "Owner")
+                        .WithMany("Tools")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.ToolImage", b =>
+                {
+                    b.HasOne("VSC.Toolsy.Common.Models.CoreEntites.Tool", null)
+                        .WithMany("ToolImages")
+                        .HasForeignKey("ToolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Owner", b =>
+                {
+                    b.Navigation("Tools");
+                });
+
             modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Profile", b =>
                 {
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Tool", b =>
+                {
+                    b.Navigation("ToolImages");
                 });
 #pragma warning restore 612, 618
         }

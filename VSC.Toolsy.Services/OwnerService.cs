@@ -22,11 +22,13 @@ namespace VSC.Toolsy.Services
 
         }
 
+
+
         public async Task<OwnerResponseDto> GetOwnerByEmailAsync(string email)
         {
             Profile profileFromDb = await _profileService.GetProfileWithAddressByEmailAsync(email);
 
-            Owner ownerFromDb =  await _ownerRepository.GetByProfileId(profileFromDb.Id);
+            Owner ownerFromDb = await _ownerRepository.GetByProfileId(profileFromDb.Id);
 
             OwnerResponseDto ownerResponseDto = new OwnerResponseDto
             {
@@ -56,6 +58,14 @@ namespace VSC.Toolsy.Services
 
             return ownerResponseDto;
 
+        }
+        public async Task<Owner> GetOwnerWithProfileByEmailAsync(string ownerEmail)
+        {
+            Profile ownerProfileFromDb = await _profileService.GetProfileByEmailAsync(ownerEmail);
+
+            Owner ownerFromDb = await _ownerRepository.GetByProfileId(ownerProfileFromDb.Id);
+
+            return ownerFromDb;
         }
 
         public async Task<Owner> RegisterOwner(OwnerRequestDto ownerRequestDto)

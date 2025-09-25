@@ -15,7 +15,7 @@ namespace VSC.Toolsy.Repositories.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Profiles",
+                name: "Profile",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -52,7 +52,7 @@ namespace VSC.Toolsy.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Profiles", x => x.Id);
+                    table.PrimaryKey("PK_Profile", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -85,34 +85,115 @@ namespace VSC.Toolsy.Repositories.Migrations
                 {
                     table.PrimaryKey("PK_Address", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Address_Profiles_ProfileId",
+                        name: "FK_Address_Profile_ProfileId",
                         column: x => x.ProfileId,
-                        principalTable: "Profiles",
+                        principalTable: "Profile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Owners",
+                name: "Owner",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    ProfileId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     BusinessName = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     BusinessDescription = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     BusinessRegistrationNumber = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProfileId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Owner", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Owner_Profile_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "Profile",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Tool",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Name = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Brand = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Model = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SerialNumber = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ManufactureYear = table.Column<int>(type: "int", nullable: true),
+                    Condition = table.Column<int>(type: "int", nullable: false),
+                    HourlyRate = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    DailyRate = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    WeeklyRate = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    MonthlyRate = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    YearlyRate = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    SecurityDeposit = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    AvailabilityStatus = table.Column<int>(type: "int", nullable: false),
+                    RequiresOperator = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    OperatorRequirements = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SafetyInstructions = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    OwnerId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DeletedBy = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Owners", x => x.Id);
+                    table.PrimaryKey("PK_Tool", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Owners_Profiles_ProfileId",
-                        column: x => x.ProfileId,
-                        principalTable: "Profiles",
+                        name: "FK_Tool_Owner_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Owner",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ToolImage",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ImageUrl = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    AltText = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsPrimary = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    ToolId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ToolImage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ToolImage_Tool_ToolId",
+                        column: x => x.ToolId,
+                        principalTable: "Tool",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -125,9 +206,19 @@ namespace VSC.Toolsy.Repositories.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Owners_ProfileId",
-                table: "Owners",
+                name: "IX_Owner_ProfileId",
+                table: "Owner",
                 column: "ProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tool_OwnerId",
+                table: "Tool",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ToolImage_ToolId",
+                table: "ToolImage",
+                column: "ToolId");
         }
 
         /// <inheritdoc />
@@ -137,10 +228,16 @@ namespace VSC.Toolsy.Repositories.Migrations
                 name: "Address");
 
             migrationBuilder.DropTable(
-                name: "Owners");
+                name: "ToolImage");
 
             migrationBuilder.DropTable(
-                name: "Profiles");
+                name: "Tool");
+
+            migrationBuilder.DropTable(
+                name: "Owner");
+
+            migrationBuilder.DropTable(
+                name: "Profile");
         }
     }
 }

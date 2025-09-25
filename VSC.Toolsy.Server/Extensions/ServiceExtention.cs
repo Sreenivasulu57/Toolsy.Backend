@@ -20,6 +20,8 @@ namespace VSC.Toolsy.Server.Extensions
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IToolRepository, ToolRepository>();
+            services.AddScoped<IToolService, ToolService>();
 
 
 

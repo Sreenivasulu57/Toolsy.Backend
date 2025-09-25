@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 namespace VSC.Toolsy.Common.Models.CoreEntites
 {
+    [Table(name: "Address")]
     public class Address
     {
         [Key]
@@ -44,6 +46,7 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
 
 
         [Required]
+        [JsonIgnore]
         public Guid ProfileId { get; set; }
 
     }
