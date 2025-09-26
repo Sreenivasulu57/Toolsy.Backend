@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
+using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
 
@@ -8,6 +10,7 @@ namespace VSC.Toolsy.Server.Controllers
 {
     [Route("api/address")]
     [ApiController]
+    [Authorize(policy: nameof(Policy.AUTHENTICATED_PROFILE))]
     public class AddressController : ControllerBase
     {
         private readonly IAddressService _addressService;

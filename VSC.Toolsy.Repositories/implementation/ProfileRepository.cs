@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Exceptions;
 using VSC.Toolsy.Common.Models.CoreEntites;
@@ -20,10 +21,14 @@ namespace VSC.Toolsy.Repositories.implementation
             => await Query()
             .FirstOrDefaultAsync(p => p.Email.Equals(email)) ?? throw new UserNotFoundException($"User With This Email {email} Is Not Found");
 
+        public async Task<Profile> GetProfileByPhoneNumberAsync(string phoneNumber)
+            => await Query()
+                .FirstOrDefaultAsync(p => p.PhoneNumber != null && p.PhoneNumber.Equals(phoneNumber)) ?? throw new UserNotFoundException($"User with phone number {phoneNumber} is not registered.");
+
         public async Task<Profile> GetProfileWithAddressByEmailAsync(string email)
             => await Query()
             .Include(p => p.Address)
-            .FirstOrDefaultAsync(p => p.Email.Equals(email))?? throw new UserNotFoundException($"User With This Email {email} Is Not Found");
+            .FirstOrDefaultAsync(p => p.Email.Equals(email)) ?? throw new UserNotFoundException($"User With This Email {email} Is Not Found");
 
     }
 }

@@ -1,7 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace VSC.Toolsy.Repositories.Migrations
 {
@@ -53,6 +56,28 @@ namespace VSC.Toolsy.Repositories.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Profile", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "SigningKeys",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    KeyId = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PrivateKey = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PublicKey = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SigningKeys", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -199,6 +224,15 @@ namespace VSC.Toolsy.Repositories.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.InsertData(
+                table: "Profile",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DateOfBirth", "DeletedAt", "DeletedBy", "Email", "EmailVerifiedAt", "FirstName", "Gender", "IsActive", "IsDeleted", "LastName", "PasswordHash", "PhoneNumber", "PhoneVerifiedAt", "ProfileImageUrl", "Role", "Status", "UpdatedAt", "UpdatedBy", "VerificationStatus" },
+                values: new object[,]
+                {
+                    { new Guid("a0b5d923-fd53-4a68-913b-7a6db1061e4d"), new DateTime(2025, 9, 26, 5, 31, 4, 169, DateTimeKind.Utc).AddTicks(2364), null, new DateTime(1985, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "admin1@example.com", new DateTime(2025, 9, 26, 11, 1, 4, 533, DateTimeKind.Local).AddTicks(9791), "Admin1", 0, true, false, "Admin1", "$2a$11$HmJ/kq2mB09cebbQ6iOnhOqtRM3bFyPi3DY9xUx3heXHw5clB5dBG", "1234567890", new DateTime(2025, 9, 26, 11, 1, 4, 534, DateTimeKind.Local).AddTicks(762), "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin1", 1, 1, null, null, 1 },
+                    { new Guid("b1c1e599-59c1-4b3d-b707-5aab9d3f38db"), new DateTime(2025, 9, 26, 5, 31, 4, 534, DateTimeKind.Utc).AddTicks(1152), null, new DateTime(1986, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "admin2@example.com", new DateTime(2025, 9, 26, 11, 1, 4, 709, DateTimeKind.Local).AddTicks(6877), "Admin2", 1, true, false, "Admin2", "$2a$11$il60YDblLctnkgRAPPT8CePjCpUpDsFTDSf2OBxwH8jF/16Z9pYjm", "0987654321", new DateTime(2025, 9, 26, 11, 1, 4, 709, DateTimeKind.Local).AddTicks(6899), "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin2", 1, 1, null, null, 1 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Address_ProfileId",
                 table: "Address",
@@ -226,6 +260,9 @@ namespace VSC.Toolsy.Repositories.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Address");
+
+            migrationBuilder.DropTable(
+                name: "SigningKeys");
 
             migrationBuilder.DropTable(
                 name: "ToolImage");

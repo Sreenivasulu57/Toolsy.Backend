@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
+using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
 
@@ -9,6 +11,7 @@ namespace VSC.Toolsy.Server.Controllers
 {
     [Route("api/v1/owner")]
     [ApiController]
+    [Authorize(policy: nameof(Policy.OWNER_ONLY))]
     public class OwnerController : ControllerBase
     {
         private readonly IOwnerService _ownerService;
@@ -18,9 +21,10 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(typeof(ApiResponseDto<Owner>), StatusCodes.Status200OK)] // OK - 200 status code
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponseDto<Owner>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RegisterOwner([FromBody] OwnerRequestDto ownerRequestDto)
         {
             if (ownerRequestDto == null)
@@ -36,9 +40,10 @@ namespace VSC.Toolsy.Server.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ApiResponseDto<Owner>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponseDto<string>),StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetOwnerByEmail([FromQuery]string email) {
+        public async Task<IActionResult> GetOwnerByEmail([FromQuery] string email)
+        {
 
             OwnerResponseDto ownerResponseDto = await _ownerService.GetOwnerByEmailAsync(email);
 

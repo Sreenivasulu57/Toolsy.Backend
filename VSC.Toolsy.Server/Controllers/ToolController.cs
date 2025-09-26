@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
+using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
 
@@ -8,6 +10,7 @@ namespace VSC.Toolsy.Server.Controllers
 {
     [ApiController]
     [Route("api/v1/tool")]
+    [Authorize(policy: nameof(Policy.OWNER_ONLY))]
     public class ToolController : ControllerBase
     {
         private readonly IToolService _toolService;
