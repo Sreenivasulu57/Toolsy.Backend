@@ -1,4 +1,5 @@
-﻿using VSC.Toolsy.Common.Models.CoreEntites;
+﻿using VSC.Toolsy.Common.DTOs.Requests;
+using VSC.Toolsy.Common.Models.CoreEntites;
 
 namespace VSC.Toolsy.Common.Interfaces
 {
@@ -6,5 +7,6 @@ namespace VSC.Toolsy.Common.Interfaces
     {
         public Task<Profile> GetProfileByEmailAsync(string ProfileEmail);
         Task<Profile> GetProfileWithAddressByEmailAsync(string email);
+        Task<string> ProfileLoginAsync(LoginRequestDto loginRequestDto);
     }
 }

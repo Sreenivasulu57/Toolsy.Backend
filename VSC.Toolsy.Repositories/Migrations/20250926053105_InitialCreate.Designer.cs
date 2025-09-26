@@ -12,7 +12,7 @@ using VSC.Toolsy.Repositories.Data;
 namespace VSC.Toolsy.Repositories.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250924132235_InitialCreate")]
+    [Migration("20250926053105_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -196,6 +196,83 @@ namespace VSC.Toolsy.Repositories.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Profile");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("a0b5d923-fd53-4a68-913b-7a6db1061e4d"),
+                            CreatedAt = new DateTime(2025, 9, 26, 5, 31, 4, 169, DateTimeKind.Utc).AddTicks(2364),
+                            DateOfBirth = new DateTime(1985, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin1@example.com",
+                            EmailVerifiedAt = new DateTime(2025, 9, 26, 11, 1, 4, 533, DateTimeKind.Local).AddTicks(9791),
+                            FirstName = "Admin1",
+                            Gender = 0,
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastName = "Admin1",
+                            PasswordHash = "$2a$11$HmJ/kq2mB09cebbQ6iOnhOqtRM3bFyPi3DY9xUx3heXHw5clB5dBG",
+                            PhoneNumber = "1234567890",
+                            PhoneVerifiedAt = new DateTime(2025, 9, 26, 11, 1, 4, 534, DateTimeKind.Local).AddTicks(762),
+                            ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin1",
+                            Role = 1,
+                            Status = 1,
+                            VerificationStatus = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("b1c1e599-59c1-4b3d-b707-5aab9d3f38db"),
+                            CreatedAt = new DateTime(2025, 9, 26, 5, 31, 4, 534, DateTimeKind.Utc).AddTicks(1152),
+                            DateOfBirth = new DateTime(1986, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin2@example.com",
+                            EmailVerifiedAt = new DateTime(2025, 9, 26, 11, 1, 4, 709, DateTimeKind.Local).AddTicks(6877),
+                            FirstName = "Admin2",
+                            Gender = 1,
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastName = "Admin2",
+                            PasswordHash = "$2a$11$il60YDblLctnkgRAPPT8CePjCpUpDsFTDSf2OBxwH8jF/16Z9pYjm",
+                            PhoneNumber = "0987654321",
+                            PhoneVerifiedAt = new DateTime(2025, 9, 26, 11, 1, 4, 709, DateTimeKind.Local).AddTicks(6899),
+                            ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin2",
+                            Role = 1,
+                            Status = 1,
+                            VerificationStatus = 1
+                        });
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.SigningKey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("KeyId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("PrivateKey")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PublicKey")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SigningKeys");
                 });
 
             modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Tool", b =>
@@ -352,13 +429,11 @@ namespace VSC.Toolsy.Repositories.Migrations
 
             modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Tool", b =>
                 {
-                    b.HasOne("VSC.Toolsy.Common.Models.CoreEntites.Owner", "Owner")
+                    b.HasOne("VSC.Toolsy.Common.Models.CoreEntites.Owner", null)
                         .WithMany("Tools")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.ToolImage", b =>

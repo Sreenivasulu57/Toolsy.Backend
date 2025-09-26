@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
+using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
 
@@ -8,6 +10,7 @@ namespace VSC.Toolsy.Server.Controllers
 {
     [Route("api/v1/user")]
     [ApiController]
+    [Authorize(policy: nameof(Policy.USER_ONLY))]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -18,6 +21,7 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpPost("save")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code

@@ -35,6 +35,16 @@ namespace VSC.Toolsy.Server.Middleware
 
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
+
+                    case UnauthorizedException unauthorizedException:
+
+                        response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        break;
+
+                    case UnauthorizedAccessException unauthorizedAccessException:
+
+                        response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        break;
                     case DbUpdateException dbEx
 
                         when dbEx.InnerException is MySqlException mysqlEx && mysqlEx.Number == 1062:
