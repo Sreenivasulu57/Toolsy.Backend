@@ -1,4 +1,5 @@
-﻿using VSC.Toolsy.Common.DTOs.Requests;
+﻿using Microsoft.EntityFrameworkCore;
+using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
@@ -9,21 +10,19 @@ namespace VSC.Toolsy.Services
     public class ToolService : IToolService
     {
         private readonly IToolRepository _toolRepository;
-        private readonly IOwnerService _ownerService;
+        private readonly IOwnerRepository _ownerRepository;
 
-        public ToolService(IToolRepository toolRepository, IOwnerService ownerService)
+        public ToolService(IToolRepository toolRepository, IOwnerService ownerService, IOwnerRepository ownerRepository)
         {
-
+            _ownerRepository = ownerRepository;
             _toolRepository = toolRepository;
-            _ownerService = ownerService;
 
         }
 
         //Todo Use TransactionManagement
-        public async Task<Tool> SaveToolAsync(ToolRequestDto toolRequestDto)
+        public async Task<Tool> Save(ToolRequestDto toolRequestDto)
         {
-
-            Owner ownerFromDb = await _ownerService.GetOwnerWithProfileByEmailAsync(toolRequestDto.OwnerEmail);
+            Owner ownerFromDb = await _ownerRepository.GetByOwnerId(toolRequestDto.OwnerId);
 
             List<ToolImage> toolImages = toolRequestDto.Images
                 .Select(i => new ToolImage
@@ -72,5 +71,84 @@ namespace VSC.Toolsy.Services
 
             return tool;
         }
+        //todo in future booking update the available status as rented 
+        public async Task<Tool> UpdateByToolId(ToolRequestDto toolRequestDto, Guid toolId)
+        {
+            Tool toolFromDb = await _toolRepository.GetByToolId(toolId);
+
+            if (toolFromDb == null)
+            {
+                throw new Exception("Tool not found.");
+            }
+
+            toolFromDb.Name = toolRequestDto.Name;
+            toolFromDb.Description = toolRequestDto.Description;
+            toolFromDb.Brand = toolRequestDto.Brand;
+            toolFromDb.Model = toolRequestDto.Model;
+            toolFromDb.SerialNumber = toolRequestDto.SerialNumber;
+            toolFromDb.ManufactureYear = toolRequestDto.ManufactureYear;
+            toolFromDb.Condition = toolRequestDto.Condition;
+            toolFromDb.HourlyRate = toolRequestDto.HourlyRate;
+            toolFromDb.DailyRate = toolRequestDto.DailyRate;
+            toolFromDb.WeeklyRate = toolRequestDto.WeeklyRate;
+            toolFromDb.MonthlyRate = toolRequestDto.MonthlyRate;
+            toolFromDb.YearlyRate = toolRequestDto.YearlyRate;
+            toolFromDb.SecurityDeposit = toolRequestDto.SecurityDeposit;
+            toolFromDb.AvailabilityStatus = toolRequestDto.AvailabilityStatus;
+            toolFromDb.RequiresOperator = toolRequestDto.RequiresOperator;
+            toolFromDb.OperatorRequirements = toolRequestDto.OperatorRequirements;
+            toolFromDb.SafetyInstructions = toolRequestDto.SafetyInstructions;
+            toolFromDb.UpdatedBy = Role.Owner.ToString();
+            toolFromDb.UpdatedAt = DateTime.UtcNow;
+            toolFromDb.OwnerId = toolRequestDto.OwnerId;
+
+            toolFromDb.ToolImages = toolRequestDto.Images
+                .Select(dto => new ToolImage
+                {
+                    ImageUrl = dto.ImageUrl,
+                    AltText = dto.Name,
+                    IsPrimary = dto.IsPrimary,
+                    ToolId = toolFromDb.Id
+                })
+                .ToList();
+
+            _toolRepository.Update(toolFromDb);
+            int result = await _toolRepository.SaveChangesAsync();
+
+            if (result <= 0)
+            {
+                throw new Exception("Internal Server Error");
+            }
+
+            return toolFromDb;
+        }
+
+        public async Task<List<Tool>> GetAllTByOwnerId(Guid ownerId)
+        {
+            List<Tool> toolsFromDb = await _toolRepository.GetAllByOwnerId(ownerId);
+            return toolsFromDb;
+        }
+
+        public async Task<Tool> DeleteByToolId(Guid toolId)
+        {
+
+            Tool toolFromDb = await _toolRepository.GetByToolId(toolId);
+
+            toolFromDb.DeletedAt = DateTime.UtcNow;
+            toolFromDb.DeletedBy = Role.Owner.ToString();
+            toolFromDb.IsDeleted = true;
+
+            _toolRepository.Update(toolFromDb);
+
+            int result = await _toolRepository.SaveChangesAsync();
+
+            if (result == 0) throw new Exception("Intenal server eroor");
+
+            return toolFromDb;
+        }
+
+        public async Task<List<Tool>> GetAll()
+            => await _toolRepository.GetAllWithImagesAsync();
+
     }
 }

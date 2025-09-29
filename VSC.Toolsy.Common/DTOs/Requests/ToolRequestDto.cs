@@ -5,9 +5,8 @@ namespace VSC.Toolsy.Common.DTOs.Requests
 {
     public class ToolRequestDto
     {
-        [Required(ErrorMessage = "Owner email is required.")]
-        [EmailAddress(ErrorMessage = "Invalid email format.")]
-        public required string OwnerEmail { get; set; }
+        [Required(ErrorMessage = "OwnerId is required.")]
+        public required Guid OwnerId { get; set; }
 
         [Required(ErrorMessage = "Tool name is required.")]
         [StringLength(200, ErrorMessage = "Name can't exceed 200 characters.")]
@@ -48,6 +47,9 @@ namespace VSC.Toolsy.Common.DTOs.Requests
 
         [Range(0, 9999999.99, ErrorMessage = "Security deposit must be non-negative.")]
         public decimal SecurityDeposit { get; set; } = 0;
+
+        [Required]
+        public ToolAvailabilityStatus AvailabilityStatus { get; set; } = ToolAvailabilityStatus.Available;
 
         public bool RequiresOperator { get; set; } = false;
 

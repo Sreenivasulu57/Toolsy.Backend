@@ -12,7 +12,7 @@ using VSC.Toolsy.Repositories.Data;
 namespace VSC.Toolsy.Repositories.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250926053105_InitialCreate")]
+    [Migration("20250929055906_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -201,18 +201,18 @@ namespace VSC.Toolsy.Repositories.Migrations
                         new
                         {
                             Id = new Guid("a0b5d923-fd53-4a68-913b-7a6db1061e4d"),
-                            CreatedAt = new DateTime(2025, 9, 26, 5, 31, 4, 169, DateTimeKind.Utc).AddTicks(2364),
+                            CreatedAt = new DateTime(2025, 9, 29, 5, 59, 5, 152, DateTimeKind.Utc).AddTicks(9283),
                             DateOfBirth = new DateTime(1985, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin1@example.com",
-                            EmailVerifiedAt = new DateTime(2025, 9, 26, 11, 1, 4, 533, DateTimeKind.Local).AddTicks(9791),
+                            EmailVerifiedAt = new DateTime(2025, 9, 29, 11, 29, 5, 443, DateTimeKind.Local).AddTicks(1290),
                             FirstName = "Admin1",
                             Gender = 0,
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "Admin1",
-                            PasswordHash = "$2a$11$HmJ/kq2mB09cebbQ6iOnhOqtRM3bFyPi3DY9xUx3heXHw5clB5dBG",
+                            PasswordHash = "$2a$11$1dG8dHN3NWfCiOu/UHhK2.ZaQRuHr8CGLa.Jl4B270PFkS9NVUHg.",
                             PhoneNumber = "1234567890",
-                            PhoneVerifiedAt = new DateTime(2025, 9, 26, 11, 1, 4, 534, DateTimeKind.Local).AddTicks(762),
+                            PhoneVerifiedAt = new DateTime(2025, 9, 29, 11, 29, 5, 443, DateTimeKind.Local).AddTicks(1769),
                             ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin1",
                             Role = 1,
                             Status = 1,
@@ -221,18 +221,18 @@ namespace VSC.Toolsy.Repositories.Migrations
                         new
                         {
                             Id = new Guid("b1c1e599-59c1-4b3d-b707-5aab9d3f38db"),
-                            CreatedAt = new DateTime(2025, 9, 26, 5, 31, 4, 534, DateTimeKind.Utc).AddTicks(1152),
+                            CreatedAt = new DateTime(2025, 9, 29, 5, 59, 5, 443, DateTimeKind.Utc).AddTicks(2063),
                             DateOfBirth = new DateTime(1986, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin2@example.com",
-                            EmailVerifiedAt = new DateTime(2025, 9, 26, 11, 1, 4, 709, DateTimeKind.Local).AddTicks(6877),
+                            EmailVerifiedAt = new DateTime(2025, 9, 29, 11, 29, 5, 592, DateTimeKind.Local).AddTicks(3361),
                             FirstName = "Admin2",
                             Gender = 1,
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "Admin2",
-                            PasswordHash = "$2a$11$il60YDblLctnkgRAPPT8CePjCpUpDsFTDSf2OBxwH8jF/16Z9pYjm",
+                            PasswordHash = "$2a$11$Im0UyuvNxtiNe.JcQmuW7.8OgJyZgCif/zmbg9w/GDd9Gpf0wq9HK",
                             PhoneNumber = "0987654321",
-                            PhoneVerifiedAt = new DateTime(2025, 9, 26, 11, 1, 4, 709, DateTimeKind.Local).AddTicks(6899),
+                            PhoneVerifiedAt = new DateTime(2025, 9, 29, 11, 29, 5, 592, DateTimeKind.Local).AddTicks(3377),
                             ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin2",
                             Role = 1,
                             Status = 1,

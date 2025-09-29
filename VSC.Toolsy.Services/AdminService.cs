@@ -14,10 +14,10 @@ namespace VSC.Toolsy.Services
             _userService = userService;
         }
 
-        public async Task<bool> ApproveProfileAccountAsync(string email)
+        public async Task<bool> ApproveProfileAccountAsync(Guid profileId)
         {
 
-            Profile userFromDb = await _userService.GetByEmailAsync(email);
+            Profile userFromDb = await _userService.GetByProfileId(profileId);
 
             if (userFromDb.VerificationStatus == VerificationStatus.Verified)
             {
@@ -34,11 +34,11 @@ namespace VSC.Toolsy.Services
 
         }
 
-        public async Task<bool> DeleteUserAccountAsync(string email)
+        public async Task<bool> DeleteUserAccountAsync(Guid profileId)
         {
             DateTime now = DateTime.UtcNow;
 
-            Profile userFromDb = await _userService.GetByEmailAsync(email);
+            Profile userFromDb = await _userService.GetByProfileId(profileId);
 
             if (userFromDb.IsDeleted)
             {
@@ -73,10 +73,10 @@ namespace VSC.Toolsy.Services
                 PhoneVerifiedAt = u.PhoneVerifiedAt
             }).ToList();
 
-        public async Task<AdminUserDto> GetUserByEmailAsync(string email)
+        public async Task<AdminUserDto> GetUserByProfileIdAsync(Guid profileId)
         {
 
-            Profile userFromDb = (await _userService.GetByEmailAsync(email));
+            Profile userFromDb = (await _userService.GetByProfileId(profileId));
 
             return new AdminUserDto
             {

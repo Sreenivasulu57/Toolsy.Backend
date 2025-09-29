@@ -8,5 +8,7 @@ namespace VSC.Toolsy.Repositories.Interfaces
         Task<Profile> GetByEmailAsync(string email);
         Task<Profile> GetProfileByPhoneNumberAsync(string phoneNumber);
         Task<Profile> GetProfileWithAddressByEmailAsync(string profileEmail);
+        Task<Profile> GetByProfileId(Guid profileId);
+        Task<Profile> GetProfileWithAddressByProfileId(Guid profileId);
     }
 }

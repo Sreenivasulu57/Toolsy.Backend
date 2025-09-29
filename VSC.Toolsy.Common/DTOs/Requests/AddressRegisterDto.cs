@@ -4,9 +4,8 @@ namespace VSC.Toolsy.Common.DTOs.Requests
 {
     public class AddressRegisterDto
     {
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email format")]
-        public required string ProfileEmail { get; set; }
+        [Required(ErrorMessage = "ProfileId is required")]
+        public required Guid ProfileId { get; set; }
 
         [Required]
         [MaxLength(200, ErrorMessage = "AddressLine1 cannot exceed than 200 chars")]

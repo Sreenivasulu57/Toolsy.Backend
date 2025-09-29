@@ -18,11 +18,11 @@ namespace VSC.Toolsy.Services
             _profileService = profileService;
         }
 
-        public async Task<Profile> DeleteUserByEmailAsync(string email)
+        public async Task<Profile> DeleteUserByProfileId(Guid profileId)
         {
             DateTime now = DateTime.UtcNow;
 
-            Profile userFromDb = await GetByEmailAsync(email);
+            Profile userFromDb = await _profileService.GetByProfileId(profileId);
 
             if (userFromDb.IsDeleted)
             {
@@ -47,11 +47,11 @@ namespace VSC.Toolsy.Services
         public async Task<List<Profile>> GetAllUserAsync()
             => await _profileRepository.GetAllUserAsync();
 
-        public async Task<Profile> GetProfileWithAddressByEmailAsync(string profileEmail)
-            => await _profileService.GetProfileWithAddressByEmailAsync(profileEmail);
+        public async Task<Profile> GetProfileWithAddressByProfileId(Guid profileId)
+            => await _profileService.GetProfileWithAddressByProfileId(profileId);
 
-        public async Task<Profile> GetByEmailAsync(string email)
-            => await _profileRepository.GetByEmailAsync(email);
+        public async Task<Profile> GetByProfileId(Guid profileId)
+            => await _profileRepository.GetByProfileId(profileId);
 
         public async Task<Profile> SaveAsync(RegisterUserDto registerUserDto)
         {
@@ -76,9 +76,9 @@ namespace VSC.Toolsy.Services
             return user;
         }
 
-        public async Task<Profile> UpdateUser(UserUpdateDTO userUpdateDTO, string email)
+        public async Task<Profile> UpdateUser(UserUpdateDTO userUpdateDTO, Guid profileId)
         {
-            Profile userFromDb = await GetByEmailAsync(email);
+            Profile userFromDb = await _profileService.GetByProfileId(profileId);
 
             userFromDb.FirstName = userUpdateDTO.FirstName;
             userFromDb.LastName = userUpdateDTO.LastName;
