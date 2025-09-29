@@ -43,14 +43,14 @@ namespace VSC.Toolsy.Server.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
-        public async Task<IActionResult> GetUserByEmail(string email)
+        public async Task<IActionResult> GetByProfileId(Guid profileId)
         {
-            if (email == null)
+            if (profileId == null)
             {
-                return BadRequest(ApiResponseDto<string>.FailureResponse("Email is required."));
+                return BadRequest(ApiResponseDto<string>.FailureResponse("profileId is required."));
             }
 
-            Profile userFromDb = await _userService.GetProfileWithAddressByEmailAsync(email);
+            Profile userFromDb = await _userService.GetProfileWithAddressByProfileId(profileId);
 
             if (userFromDb == null)
             {
@@ -60,19 +60,19 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "GetUserByEmail"));
         }
 
-        [HttpPut("delete-user-by-email")]
+        [HttpPut("delete-user-by-profileid")]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status codecode
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
 
-        public async Task<IActionResult> DeleteUserByEmail(string email)
+        public async Task<IActionResult> DeleteByProfileId(Guid profileId)
         {
-            if (email == null)
+            if (profileId == null)
             {
-                return BadRequest(ApiResponseDto<string>.FailureResponse("Email is required."));
+                return BadRequest(ApiResponseDto<string>.FailureResponse("profileId is required."));
             }
-            Profile userFromDb = await _userService.DeleteUserByEmailAsync(email);
+            Profile userFromDb = await _userService.DeleteUserByProfileId(profileId);
 
 
             if (userFromDb == null)
@@ -80,7 +80,7 @@ namespace VSC.Toolsy.Server.Controllers
                 return NotFound(ApiResponseDto<string>.FailureResponse("User not found or could not be deleted."));
             }
 
-            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "DeleteUserByEmail"));
+            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, " User deleted successfully"));
         }
 
         [HttpPut("update")]
@@ -88,15 +88,15 @@ namespace VSC.Toolsy.Server.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
-        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO, string email)
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO, Guid profileId)
         {
 
-            if (userUpdateDTO == null || email == null)
+            if (userUpdateDTO == null || profileId == null)
             {
                 return BadRequest(ApiResponseDto<string>.FailureResponse("Invalid input data."));
             }
 
-            Profile userFromDb = await _userService.UpdateUser(userUpdateDTO, email);
+            Profile userFromDb = await _userService.UpdateUser(userUpdateDTO, profileId);
 
 
             if (userFromDb == null)
@@ -104,7 +104,7 @@ namespace VSC.Toolsy.Server.Controllers
                 return NotFound(ApiResponseDto<string>.FailureResponse("User not found or could not be updated."));
             }
 
-            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "UpdateUser"));
+            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "Updated User successfully"));
 
         }
 

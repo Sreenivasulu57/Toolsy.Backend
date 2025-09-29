@@ -10,7 +10,7 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
     {
 
         [Required(ErrorMessage = "ImageUrl is required")]
-        public string ImageUrl { get; set; } = string.Empty;
+        public required string ImageUrl { get; set; } = string.Empty;
 
         [StringLength(200)]
         public string? AltText { get; set; }

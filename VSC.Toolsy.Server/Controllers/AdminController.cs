@@ -108,20 +108,20 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPut("profiles/approve")]
+        [HttpPut("profiles/approve-by-profileid")]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
-        public async Task<IActionResult> ApproveProfileAccount(string email)
+        public async Task<IActionResult> ApproveProfileAccount(Guid profileId)
         {
 
-            if (email == null)
+            if (profileId == null)
             {
-                return BadRequest(ApiResponseDto<string>.FailureResponse("Email cannot be empty"));
+                return BadRequest(ApiResponseDto<string>.FailureResponse("ProfileId cannot be empty"));
             }
 
-            bool result = await _adminService.ApproveProfileAccountAsync(email);
+            bool result = await _adminService.ApproveProfileAccountAsync(profileId);
 
             if (!result)
             {
@@ -134,19 +134,19 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPut("user/delete-by-email")]
+        [HttpPut("user/delete-by-profileid")]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
-        public async Task<IActionResult> DeleteUserAccount(string email)
+        public async Task<IActionResult> DeleteUserAccount(Guid profileId)
         {
-            if (email == null)
+            if (profileId == null)
             {
-                return BadRequest(ApiResponseDto<string>.FailureResponse("Email cannot be empty"));
+                return BadRequest(ApiResponseDto<string>.FailureResponse("ProfileId cannot be empty"));
             }
 
-            bool result = await _adminService.DeleteUserAccountAsync(email);
+            bool result = await _adminService.DeleteUserAccountAsync(profileId);
 
             if (!result)
             {
@@ -157,19 +157,19 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpGet("user/email")]
+        [HttpGet("user/profileid")]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
-        public async Task<IActionResult> GetUserByEmail(string email)
+        public async Task<IActionResult> GetUserByProfileId(Guid profileId)
         {
-            if (email == null)
+            if (profileId == null)
             {
-                return BadRequest(ApiResponseDto<string>.FailureResponse("Email cannot be empty"));
+                return BadRequest(ApiResponseDto<string>.FailureResponse("ProfileId cannot be empty"));
             }
 
-            AdminUserDto adminUserDto = await _adminService.GetUserByEmailAsync(email);
+            AdminUserDto adminUserDto = await _adminService.GetUserByProfileIdAsync(profileId);
 
 
             if (adminUserDto == null)

@@ -21,7 +21,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPost("save")]
         [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
@@ -29,9 +29,58 @@ namespace VSC.Toolsy.Server.Controllers
         public async Task<IActionResult> SaveTool([FromBody] ToolRequestDto toolRequestDto)
         {
 
-            Tool toolId = await _toolService.SaveToolAsync(toolRequestDto);
+            Tool tool = await _toolService.Save(toolRequestDto);
 
-            return Ok(ApiResponseDto<Tool>.SuccessResponse(toolId, "Tool Added Successfully"));
+            return Ok(ApiResponseDto<Tool>.SuccessResponse(tool, "Tool Added Successfully"));
+
+        }
+
+        [HttpPut("update-by-toolid")]
+        [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateTool([FromBody] ToolRequestDto toolRequestDto, Guid toolId)
+        {
+            Tool tool = await _toolService.UpdateByToolId(toolRequestDto, toolId);
+
+            return Ok(ApiResponseDto<Tool>.SuccessResponse(tool, "Tool Updated Succesfully"));
+        }
+        [HttpPut("delete-by-toolid")]
+        [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteTool(Guid toolId)
+        {
+            Tool tool = await _toolService.DeleteByToolId(toolId);
+
+            return Ok(ApiResponseDto<Tool>.SuccessResponse(tool, "Tool deleted Succesfully"));
+        }
+
+        [HttpGet("fetch-all-by-ownerid")]
+        [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllToolsOwnerIdAsync(Guid ownerId)
+        {
+            List<Tool> tools = await _toolService.GetAllTByOwnerId(ownerId);
+
+            return Ok(ApiResponseDto<List<Tool>>.SuccessResponse(tools, "Tools fetched succesfully"));
+
+        }
+        [HttpGet("fetch-all")]
+        [Authorize(policy: nameof(Policy.AUTHENTICATED_PROFILE))]
+        [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllTools()
+        {
+            List<Tool> tools = await _toolService.GetAll();
+
+            return Ok(ApiResponseDto<List<Tool>>.SuccessResponse(tools, "Tools fetched succesfully"));
 
         }
     }

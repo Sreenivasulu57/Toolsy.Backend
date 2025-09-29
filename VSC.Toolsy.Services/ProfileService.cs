@@ -25,9 +25,10 @@ namespace VSC.Toolsy.Services
             _configuration = configuration;
         }
 
-        public async Task<Profile> GetProfileByEmailAsync(string profileEmail)
+        // This is for the Users only
+        public async Task<Profile> GetByProfileId(Guid profileId)
         {
-            Profile profile = await _profileRepository.GetByEmailAsync(profileEmail);
+            Profile profile = await _profileRepository.GetByProfileId(profileId);
 
             return profile;
         }
@@ -66,6 +67,10 @@ namespace VSC.Toolsy.Services
 
             return await GenerateJwtToken(profileFromDb);
         }
+
+        public async Task<Profile> GetProfileByEmailAsync(string email)
+            => await _profileRepository.GetByEmailAsync(email);
+
 
         public async Task<Profile> GetProfileByPhoneNumberAsync(string phoneNumber)
         {
@@ -111,6 +116,8 @@ namespace VSC.Toolsy.Services
 
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
+        public async Task<Profile> GetProfileWithAddressByProfileId(Guid profileId)
+            => await _profileRepository.GetProfileWithAddressByProfileId(profileId);
 
     }
 }

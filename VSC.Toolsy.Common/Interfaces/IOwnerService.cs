@@ -7,7 +7,9 @@ namespace VSC.Toolsy.Common.Interfaces
     public interface IOwnerService
     {
         Task<OwnerResponseDto> GetOwnerByEmailAsync(string email);
-        Task<Owner> GetOwnerWithProfileByEmailAsync(string ownerEmail);
+        Task<OwnerResponseDto> GetOwnerByOwnerId(Guid ownerId);
+        Task<Owner> GetOwnerWithProfileByOwerId(Guid ownerId);
         Task<Owner> RegisterOwner(OwnerRequestDto ownerRequestDto);
+
     }
 }

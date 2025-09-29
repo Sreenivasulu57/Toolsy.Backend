@@ -4,9 +4,9 @@ namespace VSC.Toolsy.Common.Interfaces
 {
     public interface IAdminService
     {
-        Task<bool> ApproveProfileAccountAsync(string email);
-        Task<bool> DeleteUserAccountAsync(string email);
+        Task<bool> ApproveProfileAccountAsync(Guid profileId);
+        Task<bool> DeleteUserAccountAsync(Guid profileId);
         Task<List<AdminUserDto>> GetAllUsersForAdminAsync();
-        Task<AdminUserDto> GetUserByEmailAsync(string email);
+        Task<AdminUserDto> GetUserByProfileIdAsync(Guid profileId);
     }
 }
