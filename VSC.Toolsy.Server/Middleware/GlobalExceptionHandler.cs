@@ -34,8 +34,18 @@ namespace VSC.Toolsy.Server.Middleware
                     case OwnerNotFoundException ownerNotFoundException:
                     case ToolNotFoundException toolNotFoundException:
                     case AddressNotFoundException addressNotFoundException:
+                    case EmailNotFoundException emailNotFoundException:
 
                         response.StatusCode = (int)HttpStatusCode.NotFound;
+                        break;
+
+                    case OtpException otpException:
+
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        break;
+                    case OtpExpiredException otpExpiredException:
+
+                        response.StatusCode = (int)HttpStatusCode.Gone;
                         break;
 
                     case UnauthorizedException unauthorizedException:
