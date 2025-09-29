@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Repositories.Data;
@@ -27,6 +28,13 @@ namespace VSC.Toolsy.Server.Extensions
             services.AddScoped<IToolRepository, ToolRepository>();
             services.AddScoped<IToolService, ToolService>();
             services.AddScoped<ISigningKeyRepository, SigningKeyRepository>();
+            services.AddScoped<IEmailService, EmailService>();
+
+            string redisConnectionString = configurationManager["Redis:ConnectionString"] ?? throw new Exception("Redis ConnectionString Is Null");
+            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionString);
+
+            services.AddSingleton<IConnectionMultiplexer>(redis);
+            services.AddSingleton<IRedisCacheService, RedisCacheService>();
 
             services.AddHostedService<KeyRotationService>();
 
@@ -109,22 +117,22 @@ namespace VSC.Toolsy.Server.Extensions
 
                 options.AddPolicy(Policy.USER_ONLY.ToString(), policy =>
                 {
-                    policy.RequireRole(Role.User.ToString());
+                    policy.RequireRole(RoleRequire.User.ToString());
                 });
 
                 options.AddPolicy(Policy.OWNER_ONLY.ToString(), policy =>
                 {
-                    policy.RequireRole(Role.Owner.ToString());
+                    policy.RequireRole(RoleRequire.Owner.ToString());
                 });
 
                 options.AddPolicy(Policy.ADMIN_ONLY.ToString(), policy =>
                 {
-                    policy.RequireRole(Role.Admin.ToString());
+                    policy.RequireRole(RoleRequire.Admin.ToString());
                 });
 
                 options.AddPolicy(Policy.ADMIN_OR_OWNER.ToString(), policy =>
                 {
-                    policy.RequireRole(Role.Admin.ToString(), Role.Owner.ToString());
+                    policy.RequireRole(RoleRequire.Admin.ToString(), RoleRequire.Owner.ToString());
                 });
 
                 options.AddPolicy(Policy.AUTHENTICATED_PROFILE.ToString(), policy =>

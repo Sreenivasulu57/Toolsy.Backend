@@ -13,12 +13,14 @@ namespace VSC.Toolsy.Services
         private readonly IOwnerRepository _ownerRepository;
         private readonly IProfileRepository _profileRepository;
         private readonly IProfileService _profileService;
-        public OwnerService(IOwnerRepository ownerRepository, IProfileRepository profileRepository, IProfileService profileService)
+        private readonly IEmailService _emailService;
+        public OwnerService(IOwnerRepository ownerRepository, IProfileRepository profileRepository, IProfileService profileService, IEmailService emailService)
         {
 
             _ownerRepository = ownerRepository;
             _profileRepository = profileRepository;
             _profileService = profileService;
+            _emailService = emailService;
 
         }
 
@@ -120,6 +122,7 @@ namespace VSC.Toolsy.Services
 
             if (spResult > 0)
             {
+                _emailService.SendRegistrationSuccessEmailAsync(ownerProfile);
                 return owner;
             }
 

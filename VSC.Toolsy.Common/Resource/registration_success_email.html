@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Welcome to {{CompanyName}} — Registration Successful</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    /* Email-safe, simple styles */
+    body { background-color: #f3f4f6; margin:0; padding:20px; font-family: Arial, Helvetica, sans-serif; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+    .email-wrapper { max-width:600px; margin:0 auto; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+    .header { background:#0f172a; color:#fff; padding:20px; text-align:left; }
+    .logo { font-weight:700; font-size:20px; letter-spacing:0.2px; display:flex; align-items:center; gap:8px; }
+    .logo .brand-accent { color:#fb923c; }
+    .content { padding:24px; color:#0b1220; line-height:1.5; font-size:15px; }
+    .btn { display:inline-block; padding:12px 18px; border-radius:6px; text-decoration:none; font-weight:600; background:#fb923c; color:#fff; }
+    .small { font-size:13px; color:#6b7280; }
+    .footer { background:#f8fafc; padding:18px 24px; text-align:center; font-size:13px; color:#6b7280; }
+    .card { background:#f8fafc; padding:12px; border-radius:6px; margin-top:8px; }
+    a { color:#0b6cff; }
+    @media only screen and (max-width:480px){
+      .content { padding:16px; }
+      .header { padding:16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper" role="article" aria-label="Welcome Email">
+    <div class="header">
+      <div class="logo">
+        <!-- simple text logo; replace with an <img> tag if you have a hosted logo -->
+        <span style="display:inline-flex;align-items:center;gap:8px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.7 3.3l6 6-2.4 2.4-6-6 2.4-2.4zM3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" fill="#ffffff"/>
+          </svg>
+        </span>
+        <span style="font-size:18px;color:#ffffff;"><strong>Tool<span class="brand-accent" style="color:#fb923c">sy</span></strong></span>
+      </div>
+    </div>
+
+    <div class="content">
+      <h2 style="margin-top:0;">Welcome, {{FirstName}} 👋</h2>
+
+      <p>We're excited to let you know that your <strong>{{Role}}</strong> account has been successfully created at <strong>{{CompanyName}}</strong>.</p>
+
+      <div class="card small">
+        <p style="margin:0;"><strong>Account details</strong></p>
+        <p style="margin:6px 0 0 0;">Email: <a href="mailto:{{Email}}">{{Email}}</a></p>
+        <p style="margin:6px 0 0 0;">Role: {{Role}}</p>
+      </div>
+
+      <p style="margin-top:18px;">You can sign in and start using your account right away. If you need to set a password or finish your profile, click the button below:</p>
+
+      <p style="margin:18px 0;">
+        <a class="btn" href="{{LoginUrl}}" target="_blank" rel="noopener">Log in to your account</a>
+      </p>
+
+      <p>If you didn't create this account or believe this is an error, please contact our support team immediately at <a href="mailto:{{SupportEmail}}">{{SupportEmail}}</a>.</p>
+
+      <hr style="border:none;border-top:1px solid #e6e9ef;margin:18px 0;"/>
+
+      <p class="small">Quick links:</p>
+      <p class="small"><a href="{{HelpCenterUrl}}">Help Center</a> · <a href="{{PrivacyPolicyUrl}}">Privacy Policy</a> · <a href="{{TermsUrl}}">Terms of Service</a></p>
+
+      <p style="margin-top:22px;" class="small">Thanks,<br/>The {{CompanyName}} Team</p>
+    </div>
+
+    <div class="footer">
+      <p style="margin:0 0 8px 0;"><strong>{{CompanyName}}</strong></p>
+      <p style="margin:0;" class="small">Contact: <a href="mailto:{{SupportEmail}}">{{SupportEmail}}</a> · {{CompanyPhone}}</p>
+      <p style="margin-top:10px;" class="small">You received this email because an account was created using this address. If you no longer wish to receive these emails, you can <a href="{{UnsubscribeUrl}}">unsubscribe</a>.</p>
+    </div>
+  </div>
+
+  <!-- Plain-text fallback for mail clients that prefer it -->
+  <div style="display:none;white-space:nowrap;font:15px/1px monospace;color:#fff;"> 
+    Welcome {{FirstName}} - your {{Role}} account at {{CompanyName}} has been created. Login: {{LoginUrl}} Support: {{SupportEmail}}
+  </div>
+</body>
+</html>
