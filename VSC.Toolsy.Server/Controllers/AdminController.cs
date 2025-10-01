@@ -141,10 +141,6 @@ namespace VSC.Toolsy.Server.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         public async Task<IActionResult> DeleteUserAccount(Guid profileId)
         {
-            if (profileId == null)
-            {
-                return BadRequest(ApiResponseDto<string>.FailureResponse("ProfileId cannot be empty"));
-            }
 
             bool result = await _adminService.DeleteUserAccountAsync(profileId);
 

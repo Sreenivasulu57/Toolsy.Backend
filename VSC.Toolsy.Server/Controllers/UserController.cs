@@ -38,17 +38,14 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "Added Succesfully"));
         }
 
-        [HttpGet("by-email")]
+        [HttpGet]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
         public async Task<IActionResult> GetByProfileId(Guid profileId)
         {
-            if (profileId == null)
-            {
-                return BadRequest(ApiResponseDto<string>.FailureResponse("profileId is required."));
-            }
+
 
             Profile userFromDb = await _userService.GetProfileWithAddressByProfileId(profileId);
 

@@ -101,8 +101,7 @@ namespace VSC.Toolsy.Services
 
             };
 
-            _profileRepository.Save(ownerProfile);
-            int result = await _profileRepository.SaveChangesAsync();
+            int result = await _profileRepository.SaveAsync(ownerProfile);
 
             if (result <= 0)
             {
@@ -117,8 +116,7 @@ namespace VSC.Toolsy.Services
                 BusinessRegistrationNumber = ownerRequestDto.BusinessRegistrationNumber
             };
 
-            _ownerRepository.Save(owner);
-            int spResult = await _ownerRepository.SaveChangesAsync();
+            int spResult = await _ownerRepository.SaveAsync(owner);
 
             if (spResult > 0)
             {

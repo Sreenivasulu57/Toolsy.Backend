@@ -17,6 +17,13 @@ namespace VSC.Toolsy.Server.Extensions
     {
         public static void RegisterServices(this IServiceCollection services, ConfigurationManager configurationManager)
         {
+
+            services.AddLogging(logging =>
+             {
+                 logging.AddConsole();
+                 logging.SetMinimumLevel(LogLevel.Trace);// Trace, Debug, Info, Warn, Error, Critical
+             });
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IAdminService, AdminService>();
@@ -29,6 +36,8 @@ namespace VSC.Toolsy.Server.Extensions
             services.AddScoped<IToolService, ToolService>();
             services.AddScoped<ISigningKeyRepository, SigningKeyRepository>();
             services.AddScoped<IEmailService, EmailService>();
+
+
 
             string redisConnectionString = configurationManager["Redis:ConnectionString"] ?? throw new Exception("Redis ConnectionString Is Null");
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionString);
