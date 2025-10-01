@@ -1,14 +1,65 @@
-﻿using VSC.Toolsy.Common.Models.CoreEntites;
+﻿using Microsoft.EntityFrameworkCore;
+using VSC.Toolsy.Common.Models.CoreEntites;
 using VSC.Toolsy.Repositories.Data;
 using VSC.Toolsy.Repositories.Interfaces;
 
 namespace VSC.Toolsy.Repositories.implementation
 {
-    public class AddressRepository : Repository<Address>, IAddressRepository
+    public class AddressRepository : IAddressRepository
     {
-        public AddressRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
+        public int Save(Address address)
         {
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                context.Addresses.Add(address);
+                return context.SaveChanges();
+            }
+        }
 
+        public async Task<int> SaveAsync(Address address)
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                await context.Addresses.AddAsync(address);
+                return await context.SaveChangesAsync();
+            }
+        }
+
+
+        public List<Address> GetAll()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                return context.Addresses.ToList();
+            }
+        }
+
+        public async Task<List<Address>> GetAllAsync()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                return await context.Addresses.ToListAsync();
+            }
+        }
+
+
+
+        public async Task<int> UpdateAsync(Address address)
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                context.Addresses.Update(address);
+                return await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<int> DeleteAsync(Address address)
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                context.Addresses.Remove(address);
+                return await context.SaveChangesAsync();
+            }
         }
     }
 }

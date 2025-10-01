@@ -60,9 +60,7 @@ namespace VSC.Toolsy.Services
             };
 
 
-            _toolRepository.Save(tool);
-
-            int result = await _toolRepository.SaveChangesAsync();
+            int result = await _toolRepository.SaveAsync(tool);
 
             if (result <= 0)
             {
@@ -112,8 +110,7 @@ namespace VSC.Toolsy.Services
                 })
                 .ToList();
 
-            _toolRepository.Update(toolFromDb);
-            int result = await _toolRepository.SaveChangesAsync();
+            int result = await _toolRepository.UpdateAsync(toolFromDb);
 
             if (result <= 0)
             {
@@ -138,11 +135,9 @@ namespace VSC.Toolsy.Services
             toolFromDb.DeletedBy = Role.Owner.ToString();
             toolFromDb.IsDeleted = true;
 
-            _toolRepository.Update(toolFromDb);
+            int result = await _toolRepository.UpdateAsync(toolFromDb);
 
-            int result = await _toolRepository.SaveChangesAsync();
-
-            if (result == 0) throw new Exception("Intenal server eroor");
+            if (result == 0) throw new Exception("Intenal server error");
 
             return toolFromDb;
         }

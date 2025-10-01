@@ -1,5 +1,4 @@
 ﻿using VSC.Toolsy.Common.DTOs.Requests;
-using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Exceptions;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
@@ -41,8 +40,7 @@ namespace VSC.Toolsy.Services
                 profileFromDb.UpdatedBy = profileFromDb.Role.ToString();
                 profileFromDb.UpdatedAt = DateTime.UtcNow;
 
-                _profileRepository.Update(profileFromDb);
-                int result = await _profileRepository.SaveChangesAsync();
+                int result = await _profileRepository.UpdateAsync(profileFromDb);
 
                 if (result <= 0)
                 {
@@ -89,9 +87,12 @@ namespace VSC.Toolsy.Services
                 ProfileId = profile.Id
             };
 
-            await _addressRepository.SaveAsync(address);
+            int result = await _addressRepository.SaveAsync(address);
 
-            await _addressRepository.SaveChangesAsync();
+            if (result <= 0)
+            {
+                throw new Exception("Internal Server Error");
+            }
 
             return address;
         }

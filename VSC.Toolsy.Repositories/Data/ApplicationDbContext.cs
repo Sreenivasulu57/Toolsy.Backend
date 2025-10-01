@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VSC.Toolsy.Common.DTOs.Requests;
+using Microsoft.Extensions.Configuration;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Models.CoreEntites;
 
@@ -16,6 +16,20 @@ namespace VSC.Toolsy.Repositories.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            string connectionString = config.GetConnectionString("DefaultConnection") ?? throw new Exception("connectionString is null");
+
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), options => options.EnableRetryOnFailure(5));
+
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -64,7 +78,7 @@ namespace VSC.Toolsy.Repositories.Data
 
         public DbSet<Profile> Profiles { get; set; }
 
-        public DbSet<Address> Address { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         public DbSet<Owner> Owners { get; set; }
 

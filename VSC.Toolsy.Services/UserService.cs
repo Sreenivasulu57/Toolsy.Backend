@@ -34,8 +34,7 @@ namespace VSC.Toolsy.Services
             userFromDb.DeletedAt = now;
             userFromDb.DeletedBy = Role.User.ToString();
 
-            _profileRepository.Update(userFromDb);
-            int result = await _profileRepository.SaveChangesAsync();
+            int result = await _profileRepository.UpdateAsync(userFromDb);
 
             if (result > 0)
             {
@@ -69,9 +68,12 @@ namespace VSC.Toolsy.Services
                 Role = Role.User
             };
 
-            await _profileRepository.SaveAsync(user);
+            int result = await _profileRepository.SaveAsync(user);
 
-            await _profileRepository.SaveChangesAsync();
+            if (result <= 0)
+            {
+                throw new Exception("Internal Server Error");
+            }
 
             return user;
         }
@@ -84,28 +86,24 @@ namespace VSC.Toolsy.Services
             userFromDb.LastName = userUpdateDTO.LastName;
             userFromDb.PhoneNumber = userUpdateDTO.PhoneNumber;
             userFromDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userUpdateDTO.Password);
-            userFromDb.ProfileImageUrl = userUpdateDTO.ProfileImageUrl;
+            userFromDb.ProfileImageUrl = userUpdateDTO.ProfileImageUrl ?? string.Empty;
             userFromDb.DateOfBirth = userUpdateDTO.DateOfBirth;
 
             userFromDb.UpdatedBy = Role.User.ToString();
             userFromDb.UpdatedAt = DateTime.UtcNow;
 
-            _profileRepository.Update(userFromDb);
-            int result = await _profileRepository.SaveChangesAsync();
+            int result = await _profileRepository.UpdateAsync(userFromDb);
 
-            if (result > 0)
+            if (result <= 0)
             {
-                return userFromDb;
+                throw new Exception("Internal Server Error");
             }
+            return userFromDb;
 
-            throw new Exception("Internal Server Error");
 
         }
 
         public async Task<int> UpdateUserAsync(Profile userFromDb)
-        {
-            _profileRepository.Update(userFromDb);
-            return await _profileRepository.SaveChangesAsync();
-        }
+            => await _profileRepository.UpdateAsync(userFromDb);
     }
 }
