@@ -15,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\VSC.Toolsy.LocalStorage\VSC.Toolsy.LocalStorage.csproj" />
 	  <ProjectReference Include="..\VSC.Toolsy.Services\VSC.Toolsy.Services.csproj" />
 	</ItemGroup>
 
