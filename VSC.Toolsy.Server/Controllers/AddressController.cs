@@ -5,10 +5,11 @@ using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
+using VSC.Toolsy.Common.Constants;
 
 namespace VSC.Toolsy.Server.Controllers
 {
-    [Route("api/address")]
+    [Route(RouteMap.Address.Base)]
     [ApiController]
     [Authorize(policy: nameof(Policy.AUTHENTICATED_PROFILE))]
     public class AddressController : ControllerBase
@@ -54,7 +55,7 @@ namespace VSC.Toolsy.Server.Controllers
 
             return Ok(ApiResponseDto<List<Address>>.SuccessResponse(addresses, "Address fetched succesfully"));
         }
-        [HttpGet("by-profileid")]
+        [HttpGet(RouteMap.Address.GetByProfileId)]
         [ProducesResponseType(typeof(ApiResponseDto<Address>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
