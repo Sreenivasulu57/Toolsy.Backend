@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
+using VSC.Toolsy.LocalStorage;
 using VSC.Toolsy.Repositories.Data;
 using VSC.Toolsy.Repositories.implementation;
 using VSC.Toolsy.Repositories.Implementation;
@@ -36,7 +37,8 @@ namespace VSC.Toolsy.Server.Extensions
             services.AddScoped<IToolService, ToolService>();
             services.AddScoped<ISigningKeyRepository, SigningKeyRepository>();
             services.AddScoped<IEmailService, EmailService>();
-
+            services.AddScoped<IStorageService, LocalStorageService>();
+            services.AddScoped<IMediaService, MediaService>();
 
 
             string redisConnectionString = configurationManager["Redis:ConnectionString"] ?? throw new Exception("Redis ConnectionString Is Null");
