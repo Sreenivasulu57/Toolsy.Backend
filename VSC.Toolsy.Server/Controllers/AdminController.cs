@@ -23,8 +23,8 @@ namespace VSC.Toolsy.Server.Controllers
 
         [HttpGet(RouteMap.Admin.GetAllUsers)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code 
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
         public async Task<IActionResult> GetAllUsers()
         {
             List<AdminUserDto> users = await _adminService.GetAllUsersForAdminAsync();
@@ -41,8 +41,8 @@ namespace VSC.Toolsy.Server.Controllers
 
         [HttpGet(RouteMap.Admin.GetAllVerifiedUsers)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code 
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
         public async Task<IActionResult> GetAllVerifiedUsers()
         {
             List<AdminUserDto> users = (await _adminService.GetAllUsersForAdminAsync())
@@ -64,8 +64,8 @@ namespace VSC.Toolsy.Server.Controllers
 
         [HttpGet(RouteMap.Admin.GetAllUnverifiedUsers)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code 
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
         public async Task<IActionResult> GetAllUnVerifiedUsers()
         {
             List<AdminUserDto> users = (await _adminService.GetAllUsersForAdminAsync())
@@ -87,8 +87,8 @@ namespace VSC.Toolsy.Server.Controllers
 
         [HttpGet(RouteMap.Admin.GetAllDeletedUsers)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         public async Task<IActionResult> GetAllDeletedUsers()
         {
 
@@ -111,9 +111,9 @@ namespace VSC.Toolsy.Server.Controllers
 
         [HttpPut(RouteMap.Admin.ApproveProfile)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         public async Task<IActionResult> ApproveProfileAccount(Guid profileId)
         {
 
@@ -137,9 +137,9 @@ namespace VSC.Toolsy.Server.Controllers
 
         [HttpPut(RouteMap.Admin.DeleteUser)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         public async Task<IActionResult> DeleteUserAccount(Guid profileId)
         {
 
@@ -156,9 +156,9 @@ namespace VSC.Toolsy.Server.Controllers
 
         [HttpGet(RouteMap.Admin.GetUserByProfileId)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         public async Task<IActionResult> GetUserByProfileId(Guid profileId)
         {
             if (profileId == null)
