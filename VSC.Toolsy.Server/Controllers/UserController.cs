@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VSC.Toolsy.Common.Constants;
 using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
@@ -8,7 +9,7 @@ using VSC.Toolsy.Common.Models.CoreEntites;
 
 namespace VSC.Toolsy.Server.Controllers
 {
-    [Route("api/v1/user")]
+    [Route(RouteMap.User.Base)]
     [ApiController]
     [Authorize(policy: nameof(Policy.USER_ONLY))]
     public class UserController : ControllerBase
@@ -20,7 +21,7 @@ namespace VSC.Toolsy.Server.Controllers
             _userService = userService;
         }
 
-        [HttpPost("save")]
+        [HttpPost(RouteMap.User.Save)]
         [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
@@ -57,7 +58,7 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "GetUserByEmail"));
         }
 
-        [HttpPut("delete-user-by-profileid")]
+        [HttpPut(RouteMap.User.DeleteByProfileId)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status codecode
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
@@ -80,7 +81,7 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, " User deleted successfully"));
         }
 
-        [HttpPut("update")]
+        [HttpPut(RouteMap.User.Update)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code

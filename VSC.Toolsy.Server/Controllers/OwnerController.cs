@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VSC.Toolsy.Common.Constants;
 using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
@@ -9,7 +10,7 @@ using VSC.Toolsy.Common.Models.CoreEntites;
 
 namespace VSC.Toolsy.Server.Controllers
 {
-    [Route("api/v1/owner")]
+    [Route(RouteMap.Owner.Base)]
     [ApiController]
     [Authorize(policy: nameof(Policy.OWNER_ONLY))]
     public class OwnerController : ControllerBase
@@ -20,7 +21,7 @@ namespace VSC.Toolsy.Server.Controllers
             _ownerService = ownerService;
         }
 
-        [HttpPost("register")]
+        [HttpPost(RouteMap.Owner.Register)]
         [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponseDto<Owner>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
@@ -37,7 +38,7 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<Owner>.SuccessResponse(ownerFromDb, "Owner Account Created Successfully"));
         }
 
-        [HttpGet("by-email")]
+        [HttpGet(RouteMap.Owner.GetByEmail)]
         [ProducesResponseType(typeof(ApiResponseDto<Owner>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
@@ -50,7 +51,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpGet("by-ownerid")]
+        [HttpGet(RouteMap.Owner.GetByOwnerId)]
         public async Task<IActionResult> GetOwnerByOwnerId([FromQuery] Guid ownerId)
         {
 

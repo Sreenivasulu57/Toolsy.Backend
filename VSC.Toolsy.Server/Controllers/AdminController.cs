@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VSC.Toolsy.Common.Constants;
 using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
@@ -8,7 +9,7 @@ using VSC.Toolsy.Common.Models.CoreEntites;
 namespace VSC.Toolsy.Server.Controllers
 {
     [ApiController]
-    [Route("api/v1/admin")]
+    [Route(RouteMap.Admin.Base)]
     [Authorize(policy: nameof(Policy.ADMIN_ONLY))]
     public class AdminController : ControllerBase
     {
@@ -20,7 +21,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpGet("users")]
+        [HttpGet(RouteMap.Admin.GetAllUsers)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code 
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
@@ -38,7 +39,7 @@ namespace VSC.Toolsy.Server.Controllers
             ));
         }
 
-        [HttpGet("users/verified")]
+        [HttpGet(RouteMap.Admin.GetAllVerifiedUsers)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code 
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
@@ -61,7 +62,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpGet("users/unverified")]
+        [HttpGet(RouteMap.Admin.GetAllUnverifiedUsers)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code 
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
@@ -84,7 +85,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpGet("users/deleted")]
+        [HttpGet(RouteMap.Admin.GetAllDeletedUsers)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
@@ -108,7 +109,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPut("profiles/approve-by-profileid")]
+        [HttpPut(RouteMap.Admin.ApproveProfile)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
@@ -134,7 +135,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPut("user/delete-by-profileid")]
+        [HttpPut(RouteMap.Admin.DeleteUser)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
@@ -153,7 +154,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpGet("user/profileid")]
+        [HttpGet(RouteMap.Admin.GetUserByProfileId)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code

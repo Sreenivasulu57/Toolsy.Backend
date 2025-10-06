@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VSC.Toolsy.Common.Constants;
 using VSC.Toolsy.Common.Interfaces;
 
 namespace VSC.Toolsy.Server.Controllers
 {
     [ApiController]
-    [Route("email")]
+    [Route(RouteMap.Email.Base)]
     public class EmailController : ControllerBase
     {
         private readonly IEmailService _emailService;
@@ -16,7 +17,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPost("send-otp")]
+        [HttpPost(RouteMap.Email.SendOtp)]
         public async Task<IActionResult> SendOtp([FromQuery] string email)
         {
 
@@ -26,7 +27,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpGet("verify-otp")]
+        [HttpGet(RouteMap.Email.VerifyOtp)]
         public async Task<IActionResult> VerifyOtp([FromQuery] string email, [FromQuery] string otp)
         {
 

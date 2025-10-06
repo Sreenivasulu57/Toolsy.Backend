@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VSC.Toolsy.Common.Constants;
 using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
@@ -9,7 +10,7 @@ using VSC.Toolsy.Common.Models.CoreEntites;
 namespace VSC.Toolsy.Server.Controllers
 {
     [ApiController]
-    [Route("api/v1/tool")]
+    [Route(RouteMap.Tool.Base)]
     [Authorize(policy: nameof(Policy.OWNER_ONLY))]
     public class ToolController : ControllerBase
     {
@@ -21,7 +22,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPost("save")]
+        [HttpPost(RouteMap.Tool.Save)]
         [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
@@ -35,7 +36,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPut("update-by-toolid")]
+        [HttpPut(RouteMap.Tool.UpdateByToolId)]
         [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
@@ -46,7 +47,7 @@ namespace VSC.Toolsy.Server.Controllers
 
             return Ok(ApiResponseDto<Tool>.SuccessResponse(tool, "Tool Updated Succesfully"));
         }
-        [HttpPut("delete-by-toolid")]
+        [HttpPut(RouteMap.Tool.DeleteByToolId)]
         [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
@@ -58,7 +59,7 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<Tool>.SuccessResponse(tool, "Tool deleted Succesfully"));
         }
 
-        [HttpGet("fetch-all-by-ownerid")]
+        [HttpGet(RouteMap.Tool.FetchAllByOwnerId)]
         [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
@@ -70,7 +71,7 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<List<Tool>>.SuccessResponse(tools, "Tools fetched succesfully"));
 
         }
-        [HttpGet("fetch-all")]
+        [HttpGet(RouteMap.Tool.FetchAll)]
         [Authorize(policy: nameof(Policy.AUTHENTICATED_PROFILE))]
         [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
