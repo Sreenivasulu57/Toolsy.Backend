@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using VSC.Toolsy.Common.Constants;
 using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
+using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
 
 namespace VSC.Toolsy.Server.Controllers
 {
-    [Route("api/v1/users")]
+    [Route(RouteMap.User.Base)]
     [ApiController]
+    [Authorize(policy: nameof(Policy.USER_ONLY))]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -17,7 +21,11 @@ namespace VSC.Toolsy.Server.Controllers
             _userService = userService;
         }
 
-        [HttpPost]
+        [HttpPost(RouteMap.User.Save)]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         public async Task<IActionResult> SaveUser([FromBody] RegisterUserDto dto)
         {
 
@@ -28,34 +36,74 @@ namespace VSC.Toolsy.Server.Controllers
 
             Profile userFromDb = await _userService.SaveAsync(dto);
 
-            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "Added Succesfully"));
+            return Ok(ApiResponseDto<Profile>.SuccessResponse(null, "Added Succesfully"));
         }
 
-        [HttpGet("getByEmail")]
-        public async Task<IActionResult> GetUserByEmail(string email)
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        public async Task<IActionResult> GetByProfileId(Guid profileId)
         {
-            Profile userFromDb = await _userService.GetByEmailAsync(email);
+
+
+            Profile userFromDb = await _userService.GetProfileWithAddressByProfileId(profileId);
+
+            if (userFromDb == null)
+            {
+                return NotFound(ApiResponseDto<string>.FailureResponse("User not found."));
+            }
 
             return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "GetUserByEmail"));
         }
 
-        [HttpPut("deleteByEmail")]
-        public async Task<IActionResult> DeleteUserByEmail(string email)
+        [HttpPut(RouteMap.User.DeleteByProfileId)]
+        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status codecode
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+
+        public async Task<IActionResult> DeleteByProfileId(Guid profileId)
         {
+            if (profileId == null)
+            {
+                return BadRequest(ApiResponseDto<string>.FailureResponse("profileId is required."));
+            }
+            Profile userFromDb = await _userService.DeleteUserByProfileId(profileId);
 
-            Profile userFromDb = await _userService.DeleteUserByEmailAsync(email);
 
-            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "DeleteUserByEmail"));
+            if (userFromDb == null)
+            {
+                return NotFound(ApiResponseDto<string>.FailureResponse("User not found or could not be deleted."));
+            }
 
+            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, " User deleted successfully"));
         }
 
-        [HttpPut("update")]
-        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO, string email)
+        [HttpPut(RouteMap.User.Update)]
+        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO, Guid profileId)
         {
 
-            Profile userFromDb = await _userService.UpdateUser(userUpdateDTO, email);
+            if (userUpdateDTO == null || profileId == null)
+            {
+                return BadRequest(ApiResponseDto<string>.FailureResponse("Invalid input data."));
+            }
 
-            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "UpdateUser"));
+            Profile userFromDb = await _userService.UpdateUser(userUpdateDTO, profileId);
+
+
+            if (userFromDb == null)
+            {
+                return NotFound(ApiResponseDto<string>.FailureResponse("User not found or could not be updated."));
+            }
+
+            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "Updated User successfully"));
+
         }
 
     }

@@ -1,5 +1,5 @@
-﻿using VSC.Toolsy.Common.DTOs.Requests;
-using VSC.Toolsy.Common.DTOs.Responses;
+﻿using Microsoft.Extensions.Configuration;
+using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
@@ -11,17 +11,21 @@ namespace VSC.Toolsy.Services
     public class UserService : IUserService
     {
         private readonly IProfileRepository _profileRepository;
+        private readonly IProfileService _profileService;
+        private readonly string _defaultImage;
 
-        public UserService(IProfileRepository profileRepository)
+        public UserService(IProfileRepository profileRepository, IProfileService profileService,IConfiguration config)
         {
             _profileRepository = profileRepository;
+            _profileService = profileService;
+            _defaultImage = config["UserSettings:DefaultProfileImage"];
         }
 
-        public async Task<Profile> DeleteUserByEmailAsync(string email)
+        public async Task<Profile> DeleteUserByProfileId(Guid profileId)
         {
             DateTime now = DateTime.UtcNow;
 
-            Profile userFromDb = await GetByEmailAsync(email);
+            Profile userFromDb = await _profileService.GetByProfileId(profileId);
 
             if (userFromDb.IsDeleted)
             {
@@ -31,10 +35,9 @@ namespace VSC.Toolsy.Services
             userFromDb.IsActive = false;
             userFromDb.IsDeleted = true;
             userFromDb.DeletedAt = now;
-            userFromDb.DeletedBy = Role.User.ToString();
+            userFromDb.DeletedBy = UserRole.User.ToString();
 
-            _profileRepository.Update(userFromDb);
-            int result = await _profileRepository.SaveChangesAsync();
+            int result = await _profileRepository.UpdateAsync(userFromDb);
 
             if (result > 0)
             {
@@ -46,8 +49,11 @@ namespace VSC.Toolsy.Services
         public async Task<List<Profile>> GetAllUserAsync()
             => await _profileRepository.GetAllUserAsync();
 
-        public async Task<Profile> GetByEmailAsync(string email)
-            => await _profileRepository.GetByEmailAsync(email);
+        public async Task<Profile> GetProfileWithAddressByProfileId(Guid profileId)
+            => await _profileService.GetProfileWithAddressByProfileId(profileId);
+
+        public async Task<Profile> GetByProfileId(Guid profileId)
+            => await _profileRepository.GetByProfileId(profileId);
 
         public async Task<Profile> SaveAsync(RegisterUserDto registerUserDto)
         {
@@ -57,48 +63,50 @@ namespace VSC.Toolsy.Services
                 LastName = registerUserDto.LastName,
                 Email = registerUserDto.Email,
                 PhoneNumber = registerUserDto.PhoneNumber,
+                DateOfBirth = registerUserDto.DateOfBirth,
+                Gender = registerUserDto.Gender,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password),
-                ProfileImageUrl = registerUserDto.ProfileImageUrl,
+                ProfileImageUrl = _defaultImage,
                 CreatedBy = registerUserDto.Email,
-                Role = Role.User
+                Roles = new List<UserRole> { UserRole.User}
             };
 
-            await _profileRepository.SaveAsync(user);
+            int result = await _profileRepository.SaveAsync(user);
 
-            await _profileRepository.SaveChangesAsync();
+            if (result <= 0)
+            {
+                throw new Exception("Internal Server Error");
+            }
 
             return user;
         }
 
-        public async Task<Profile> UpdateUser(UserUpdateDTO userUpdateDTO, string email)
+        public async Task<Profile> UpdateUser(UserUpdateDTO userUpdateDTO, Guid profileId)
         {
-            Profile userFromDb = await GetByEmailAsync(email);
+            Profile userFromDb = await _profileService.GetByProfileId(profileId);
 
             userFromDb.FirstName = userUpdateDTO.FirstName;
             userFromDb.LastName = userUpdateDTO.LastName;
             userFromDb.PhoneNumber = userUpdateDTO.PhoneNumber;
             userFromDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userUpdateDTO.Password);
-            userFromDb.ProfileImageUrl = userUpdateDTO.ProfileImageUrl;
+            userFromDb.ProfileImageUrl = _defaultImage;
+            userFromDb.DateOfBirth = userUpdateDTO.DateOfBirth;
 
-            userFromDb.UpdatedBy = Role.User.ToString();
+            userFromDb.UpdatedBy = UserRole.User.ToString();
             userFromDb.UpdatedAt = DateTime.UtcNow;
 
-            _profileRepository.Update(userFromDb);
-            int result = await _profileRepository.SaveChangesAsync();
+            int result = await _profileRepository.UpdateAsync(userFromDb);
 
-            if (result > 0)
+            if (result <= 0)
             {
-                return userFromDb;
+                throw new Exception("Internal Server Error");
             }
+            return userFromDb;
 
-            throw new Exception("Internal Server Error");
 
         }
 
         public async Task<int> UpdateUserAsync(Profile userFromDb)
-        {
-            _profileRepository.Update(userFromDb);
-            return await _profileRepository.SaveChangesAsync();
-        }
+            => await _profileRepository.UpdateAsync(userFromDb);
     }
 }

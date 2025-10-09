@@ -1,32 +1,43 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Models.BaseEntites;
 
 namespace VSC.Toolsy.Common.Models.CoreEntites
 {
+    [Table(name: "Profile")]
     public class Profile : AuditableEntity
     {
-        [Required]
+        [Required(ErrorMessage ="FirstName is required")]
         [StringLength(100)]
         public string FirstName { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage ="LastName is required")]
         [StringLength(100)]
         public string LastName { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage ="Email is required")]
         [EmailAddress]
         [StringLength(256)]
         public string Email { get; set; } = string.Empty;
 
+        [Required(ErrorMessage ="PhoneNo is required")]
         [Phone]
-        [StringLength(20)]
+        [StringLength(10)]
         public string? PhoneNumber { get; set; }
 
-        [Required]
-        public string PasswordHash { get; set; } = string.Empty;
+        [Required(ErrorMessage ="DateOfBirth is required")]
+        public required DateTime DateOfBirth { get; set; }
 
-        public string? ProfileImageUrl { get; set; }
+        [Required(ErrorMessage ="Gender is required")]
+        public required Gender Gender { get; set; }
+
+        [Required(ErrorMessage ="Password is required")]
+        public required string PasswordHash { get; set; }
+
+        [Required(ErrorMessage ="ProfileImg is required")]
+        public required string ProfileImageUrl { get; set; }
 
         public bool IsActive { get; set; } = true;
 
@@ -40,7 +51,11 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
 
         public DateTime? PhoneVerifiedAt { get; set; }
 
-        public Role Role { get; set; } = Role.User;
+        [JsonProperty]
+        public List<UserRole> Roles { get; set; }
+
+        [JsonIgnore]
+        public Address? Address { get; set; }
 
     }
 }

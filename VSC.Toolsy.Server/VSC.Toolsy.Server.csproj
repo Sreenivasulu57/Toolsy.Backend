@@ -7,7 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
 			<PrivateAssets>all</PrivateAssets>
@@ -16,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\VSC.Toolsy.LocalStorage\VSC.Toolsy.LocalStorage.csproj" />
 	  <ProjectReference Include="..\VSC.Toolsy.Services\VSC.Toolsy.Services.csproj" />
 	</ItemGroup>
 

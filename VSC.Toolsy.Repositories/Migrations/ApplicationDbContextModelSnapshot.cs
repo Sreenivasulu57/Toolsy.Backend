@@ -22,6 +22,67 @@ namespace VSC.Toolsy.Repositories.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Address", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("AddressLine2")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Area")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("District")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Mandal")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId")
+                        .IsUnique();
+
+                    b.ToTable("Address");
+                });
+
             modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Owner", b =>
                 {
                     b.Property<Guid>("Id")
@@ -47,7 +108,7 @@ namespace VSC.Toolsy.Repositories.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("Owners");
+                    b.ToTable("Owner");
                 });
 
             modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Profile", b =>
@@ -61,6 +122,9 @@ namespace VSC.Toolsy.Repositories.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
@@ -81,6 +145,9 @@ namespace VSC.Toolsy.Repositories.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -97,17 +164,20 @@ namespace VSC.Toolsy.Repositories.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<DateTime?>("PhoneVerifiedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ProfileImageUrl")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<string>("Roles")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -123,7 +193,225 @@ namespace VSC.Toolsy.Repositories.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profiles");
+                    b.ToTable("Profile");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("a0b5d923-fd53-4a68-913b-7a6db1061e4d"),
+                            CreatedAt = new DateTime(2025, 10, 9, 6, 9, 54, 504, DateTimeKind.Utc).AddTicks(1153),
+                            DateOfBirth = new DateTime(1985, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin1@example.com",
+                            EmailVerifiedAt = new DateTime(2025, 10, 9, 11, 39, 54, 787, DateTimeKind.Local).AddTicks(1895),
+                            FirstName = "Admin1",
+                            Gender = 0,
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastName = "Admin1",
+                            PasswordHash = "$2a$11$ipfB1vCXtjOGx/bJOcYbmuLrEolh8QAPIpfc5ezr8j47sFsszFQ5G",
+                            PhoneNumber = "1234567890",
+                            PhoneVerifiedAt = new DateTime(2025, 10, 9, 11, 39, 54, 787, DateTimeKind.Local).AddTicks(2290),
+                            ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin1",
+                            Roles = "[1]",
+                            Status = 1,
+                            VerificationStatus = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("b1c1e599-59c1-4b3d-b707-5aab9d3f38db"),
+                            CreatedAt = new DateTime(2025, 10, 9, 6, 9, 54, 787, DateTimeKind.Utc).AddTicks(2677),
+                            DateOfBirth = new DateTime(1986, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin2@example.com",
+                            EmailVerifiedAt = new DateTime(2025, 10, 9, 11, 39, 54, 933, DateTimeKind.Local).AddTicks(4783),
+                            FirstName = "Admin2",
+                            Gender = 1,
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastName = "Admin2",
+                            PasswordHash = "$2a$11$uMJ7/M0RuOin2iPXFhWBpeGnapzivIYFHVl/rEVOSGVN/tNId3CG2",
+                            PhoneNumber = "0987654321",
+                            PhoneVerifiedAt = new DateTime(2025, 10, 9, 11, 39, 54, 933, DateTimeKind.Local).AddTicks(4796),
+                            ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin2",
+                            Roles = "[1]",
+                            Status = 1,
+                            VerificationStatus = 1
+                        });
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.SigningKey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("KeyId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("PrivateKey")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PublicKey")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SigningKeys");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Tool", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("AvailabilityStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Brand")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Condition")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("DailyRate")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("HourlyRate")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int?>("ManufactureYear")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Model")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<decimal>("MonthlyRate")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("OperatorRequirements")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("RequiresOperator")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SafetyInstructions")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("SecurityDeposit")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<string>("SerialNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("WeeklyRate")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<decimal>("YearlyRate")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Tool");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.ToolImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("AltText")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("ToolId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ToolId");
+
+                    b.ToTable("ToolImage");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Address", b =>
+                {
+                    b.HasOne("VSC.Toolsy.Common.Models.CoreEntites.Profile", null)
+                        .WithOne("Address")
+                        .HasForeignKey("VSC.Toolsy.Common.Models.CoreEntites.Address", "ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Owner", b =>
@@ -135,6 +423,39 @@ namespace VSC.Toolsy.Repositories.Migrations
                         .IsRequired();
 
                     b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Tool", b =>
+                {
+                    b.HasOne("VSC.Toolsy.Common.Models.CoreEntites.Owner", null)
+                        .WithMany("Tools")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.ToolImage", b =>
+                {
+                    b.HasOne("VSC.Toolsy.Common.Models.CoreEntites.Tool", null)
+                        .WithMany("ToolImages")
+                        .HasForeignKey("ToolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Owner", b =>
+                {
+                    b.Navigation("Tools");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Profile", b =>
+                {
+                    b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("VSC.Toolsy.Common.Models.CoreEntites.Tool", b =>
+                {
+                    b.Navigation("ToolImages");
                 });
 #pragma warning restore 612, 618
         }
