@@ -8,6 +8,8 @@ WebApplication app = builder.Build();
 
 app.UseApiDefaults();
 
+app.UseCors("AllowAngular");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -36,7 +36,7 @@ namespace VSC.Toolsy.Server.Controllers
 
             Profile userFromDb = await _userService.SaveAsync(dto);
 
-            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "Added Succesfully"));
+            return Ok(ApiResponseDto<Profile>.SuccessResponse(null, "Added Succesfully"));
         }
 
         [HttpGet]

@@ -1,4 +1,5 @@
-﻿using VSC.Toolsy.Common.DTOs.Requests;
+﻿using Microsoft.Extensions.Configuration;
+using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
@@ -11,11 +12,13 @@ namespace VSC.Toolsy.Services
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IProfileService _profileService;
+        private readonly string _defaultImage;
 
-        public UserService(IProfileRepository profileRepository, IProfileService profileService)
+        public UserService(IProfileRepository profileRepository, IProfileService profileService,IConfiguration config)
         {
             _profileRepository = profileRepository;
             _profileService = profileService;
+            _defaultImage = config["UserSettings:DefaultProfileImage"];
         }
 
         public async Task<Profile> DeleteUserByProfileId(Guid profileId)
@@ -32,7 +35,7 @@ namespace VSC.Toolsy.Services
             userFromDb.IsActive = false;
             userFromDb.IsDeleted = true;
             userFromDb.DeletedAt = now;
-            userFromDb.DeletedBy = Role.User.ToString();
+            userFromDb.DeletedBy = UserRole.User.ToString();
 
             int result = await _profileRepository.UpdateAsync(userFromDb);
 
@@ -63,9 +66,9 @@ namespace VSC.Toolsy.Services
                 DateOfBirth = registerUserDto.DateOfBirth,
                 Gender = registerUserDto.Gender,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password),
-                ProfileImageUrl = registerUserDto.ProfileImageUrl,
+                ProfileImageUrl = _defaultImage,
                 CreatedBy = registerUserDto.Email,
-                Role = Role.User
+                Roles = new List<UserRole> { UserRole.User}
             };
 
             int result = await _profileRepository.SaveAsync(user);
@@ -86,10 +89,10 @@ namespace VSC.Toolsy.Services
             userFromDb.LastName = userUpdateDTO.LastName;
             userFromDb.PhoneNumber = userUpdateDTO.PhoneNumber;
             userFromDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userUpdateDTO.Password);
-            userFromDb.ProfileImageUrl = userUpdateDTO.ProfileImageUrl ?? string.Empty;
+            userFromDb.ProfileImageUrl = _defaultImage;
             userFromDb.DateOfBirth = userUpdateDTO.DateOfBirth;
 
-            userFromDb.UpdatedBy = Role.User.ToString();
+            userFromDb.UpdatedBy = UserRole.User.ToString();
             userFromDb.UpdatedAt = DateTime.UtcNow;
 
             int result = await _profileRepository.UpdateAsync(userFromDb);

@@ -26,7 +26,7 @@ namespace VSC.Toolsy.Services
 
             userFromDb.VerificationStatus = VerificationStatus.Verified;
             userFromDb.UpdatedAt = DateTime.UtcNow;
-            userFromDb.UpdatedBy = Role.Admin.ToString();
+            userFromDb.UpdatedBy = UserRole.Admin.ToString();
 
             int result = await _userService.UpdateUserAsync(userFromDb);
 
@@ -48,7 +48,7 @@ namespace VSC.Toolsy.Services
             userFromDb.IsActive = false;
             userFromDb.IsDeleted = true;
             userFromDb.DeletedAt = now;
-            userFromDb.DeletedBy = Role.Admin.ToString();
+            userFromDb.DeletedBy = UserRole.Admin.ToString();
 
             int result = await _userService.UpdateUserAsync(userFromDb);
 

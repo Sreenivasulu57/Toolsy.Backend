@@ -35,8 +35,6 @@ namespace VSC.Toolsy.Common.DTOs.Requests
         [DataType(DataType.Password)]
         public required string Password { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Profile Image is required")]
-        [Url(ErrorMessage = "Invalid profile image URL")]
-        public required string ProfileImageUrl { get; set; }
+       
     }
 }

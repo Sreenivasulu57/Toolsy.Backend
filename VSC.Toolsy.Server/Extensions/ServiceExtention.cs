@@ -47,7 +47,17 @@ namespace VSC.Toolsy.Server.Extensions
 
             services.AddHostedService<KeyRotationService>();
 
-
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngular", policy =>
+                {
+                    policy
+                        .WithOrigins("http://localhost:4200") // Angular dev server
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials(); // optional if you use cookies
+                });
+            });
 
             services.AddControllers();
             services.AddEndpointsApiExplorer();

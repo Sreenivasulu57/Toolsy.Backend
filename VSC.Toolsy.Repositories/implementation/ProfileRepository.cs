@@ -50,7 +50,7 @@ namespace VSC.Toolsy.Repositories.implementation
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 return await context.Profiles
-                     .Where(p => p.Role.Equals(Role.User))
+                     .Where(p => p.Roles.Contains(UserRole.User))
                      .ToListAsync();
             }
         }

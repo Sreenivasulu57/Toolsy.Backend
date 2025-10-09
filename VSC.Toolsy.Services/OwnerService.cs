@@ -1,4 +1,6 @@
-﻿using VSC.Toolsy.Common.DTOs.Requests;
+﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.Extensions.Configuration;
+using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
@@ -14,13 +16,15 @@ namespace VSC.Toolsy.Services
         private readonly IProfileRepository _profileRepository;
         private readonly IProfileService _profileService;
         private readonly IEmailService _emailService;
-        public OwnerService(IOwnerRepository ownerRepository, IProfileRepository profileRepository, IProfileService profileService, IEmailService emailService)
+        private readonly string _defaultImage;
+        public OwnerService(IOwnerRepository ownerRepository, IProfileRepository profileRepository, IProfileService profileService, IEmailService emailService,IConfiguration config)
         {
 
             _ownerRepository = ownerRepository;
             _profileRepository = profileRepository;
             _profileService = profileService;
             _emailService = emailService;
+            _defaultImage = config["UserSettings:DefaultProfileImage"];
 
         }
 
@@ -56,13 +60,13 @@ namespace VSC.Toolsy.Services
                 PhoneNumber = profile.PhoneNumber,
                 DateOfBirth = profile.DateOfBirth,
                 Gender = profile.Gender,
-                ProfileImageUrl = profile.ProfileImageUrl,
+                ProfileImageUrl = _defaultImage,
                 IsActive = profile.IsActive,
                 Status = profile.Status,
                 VerificationStatus = profile.VerificationStatus,
                 EmailVerifiedAt = profile.EmailVerifiedAt,
                 PhoneVerifiedAt = profile.PhoneVerifiedAt,
-                Role = profile.Role,
+                Roles = profile.Roles,
                 Address = profile.Address,
 
                 OwnerId = owner.Id,
@@ -94,10 +98,10 @@ namespace VSC.Toolsy.Services
                 DateOfBirth = ownerRequestDto.DateOfBirth,
                 Gender = ownerRequestDto.Gender,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(ownerRequestDto.Password),
-                ProfileImageUrl = ownerRequestDto.ProfileImageUrl,
-                Role = Role.Owner,
+                ProfileImageUrl = _defaultImage,
+                Roles = new List<UserRole> { UserRole.Owner },
 
-                CreatedBy = Role.Owner.ToString()
+                CreatedBy = UserRole.Owner.ToString()
 
             };
 

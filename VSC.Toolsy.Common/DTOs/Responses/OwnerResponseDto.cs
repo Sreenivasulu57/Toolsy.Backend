@@ -47,7 +47,7 @@ namespace VSC.Toolsy.Common.DTOs.Responses
 
         public DateTime? PhoneVerifiedAt { get; set; }
 
-        public Role Role { get; set; } = Role.User;
+        public List<UserRole> Roles { get; set; } = new List<UserRole>();
 
         public Address? Address { get; set; }
 

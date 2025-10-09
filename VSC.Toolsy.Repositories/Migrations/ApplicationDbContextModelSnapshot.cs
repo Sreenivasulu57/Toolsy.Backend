@@ -175,8 +175,9 @@ namespace VSC.Toolsy.Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<string>("Roles")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -198,40 +199,40 @@ namespace VSC.Toolsy.Repositories.Migrations
                         new
                         {
                             Id = new Guid("a0b5d923-fd53-4a68-913b-7a6db1061e4d"),
-                            CreatedAt = new DateTime(2025, 10, 1, 5, 2, 48, 361, DateTimeKind.Utc).AddTicks(4908),
+                            CreatedAt = new DateTime(2025, 10, 9, 6, 9, 54, 504, DateTimeKind.Utc).AddTicks(1153),
                             DateOfBirth = new DateTime(1985, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin1@example.com",
-                            EmailVerifiedAt = new DateTime(2025, 10, 1, 10, 32, 48, 672, DateTimeKind.Local).AddTicks(929),
+                            EmailVerifiedAt = new DateTime(2025, 10, 9, 11, 39, 54, 787, DateTimeKind.Local).AddTicks(1895),
                             FirstName = "Admin1",
                             Gender = 0,
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "Admin1",
-                            PasswordHash = "$2a$11$95BzJkPeSXwKw0pK/PEVrOYsGPPyBWd9X.VgXTmGRqLUQNaNwpL12",
+                            PasswordHash = "$2a$11$ipfB1vCXtjOGx/bJOcYbmuLrEolh8QAPIpfc5ezr8j47sFsszFQ5G",
                             PhoneNumber = "1234567890",
-                            PhoneVerifiedAt = new DateTime(2025, 10, 1, 10, 32, 48, 672, DateTimeKind.Local).AddTicks(2007),
+                            PhoneVerifiedAt = new DateTime(2025, 10, 9, 11, 39, 54, 787, DateTimeKind.Local).AddTicks(2290),
                             ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin1",
-                            Role = 1,
+                            Roles = "[1]",
                             Status = 1,
                             VerificationStatus = 1
                         },
                         new
                         {
                             Id = new Guid("b1c1e599-59c1-4b3d-b707-5aab9d3f38db"),
-                            CreatedAt = new DateTime(2025, 10, 1, 5, 2, 48, 672, DateTimeKind.Utc).AddTicks(2955),
+                            CreatedAt = new DateTime(2025, 10, 9, 6, 9, 54, 787, DateTimeKind.Utc).AddTicks(2677),
                             DateOfBirth = new DateTime(1986, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin2@example.com",
-                            EmailVerifiedAt = new DateTime(2025, 10, 1, 10, 32, 48, 852, DateTimeKind.Local).AddTicks(9042),
+                            EmailVerifiedAt = new DateTime(2025, 10, 9, 11, 39, 54, 933, DateTimeKind.Local).AddTicks(4783),
                             FirstName = "Admin2",
                             Gender = 1,
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "Admin2",
-                            PasswordHash = "$2a$11$z7AKN5/prbTtjAPBfVMxpOAkTJOVO3YK75AoDFy0f2ghMV9cGJWRu",
+                            PasswordHash = "$2a$11$uMJ7/M0RuOin2iPXFhWBpeGnapzivIYFHVl/rEVOSGVN/tNId3CG2",
                             PhoneNumber = "0987654321",
-                            PhoneVerifiedAt = new DateTime(2025, 10, 1, 10, 32, 48, 852, DateTimeKind.Local).AddTicks(9069),
+                            PhoneVerifiedAt = new DateTime(2025, 10, 9, 11, 39, 54, 933, DateTimeKind.Local).AddTicks(4796),
                             ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin2",
-                            Role = 1,
+                            Roles = "[1]",
                             Status = 1,
                             VerificationStatus = 1
                         });

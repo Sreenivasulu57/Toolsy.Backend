@@ -1,7 +1,7 @@
 ﻿
 namespace VSC.Toolsy.Common.Enums
 {
-    public enum Role
+    public enum UserRole
     {
         User,
         Admin,

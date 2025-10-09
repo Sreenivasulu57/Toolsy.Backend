@@ -92,11 +92,11 @@ namespace VSC.Toolsy.Services
 
         public async Task SendRegistrationSuccessEmailAsync(Profile profile)
         {
-            string subject = $"Welcome! Your {profile.Role} Account Has Been Successfully Created";
+            string subject = $"Welcome! Your {profile.Roles} Account Has Been Successfully Created";
 
             string messageBody = (await LoadTemplateAsync("registration_success_email"))
                 .Replace("{{FirstName}}", profile.FirstName)
-                .Replace("{{Role}}", profile.Role.ToString())
+                .Replace("{{Role}}", profile.Roles.ToString())
                 .Replace("{{Email}}", profile.Email)
                 .Replace("{{CompanyName}}", FROM_NAME)
                 .Replace("{{SupportEmail}}", FROM_ADDRESS);

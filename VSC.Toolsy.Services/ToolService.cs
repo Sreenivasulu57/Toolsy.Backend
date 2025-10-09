@@ -53,7 +53,7 @@ namespace VSC.Toolsy.Services
                 SafetyInstructions = toolRequestDto.SafetyInstructions,
                 ToolImages = toolImages,
 
-                CreatedBy = Role.Owner.ToString(),
+                CreatedBy = UserRole.Owner.ToString(),
                 CreatedAt = DateTime.UtcNow,
 
                 OwnerId = ownerFromDb.Id
@@ -96,7 +96,7 @@ namespace VSC.Toolsy.Services
             toolFromDb.RequiresOperator = toolRequestDto.RequiresOperator;
             toolFromDb.OperatorRequirements = toolRequestDto.OperatorRequirements;
             toolFromDb.SafetyInstructions = toolRequestDto.SafetyInstructions;
-            toolFromDb.UpdatedBy = Role.Owner.ToString();
+            toolFromDb.UpdatedBy = UserRole.Owner.ToString();
             toolFromDb.UpdatedAt = DateTime.UtcNow;
             toolFromDb.OwnerId = toolRequestDto.OwnerId;
 
@@ -132,7 +132,7 @@ namespace VSC.Toolsy.Services
             Tool toolFromDb = await _toolRepository.GetByToolId(toolId);
 
             toolFromDb.DeletedAt = DateTime.UtcNow;
-            toolFromDb.DeletedBy = Role.Owner.ToString();
+            toolFromDb.DeletedBy = UserRole.Owner.ToString();
             toolFromDb.IsDeleted = true;
 
             int result = await _toolRepository.UpdateAsync(toolFromDb);

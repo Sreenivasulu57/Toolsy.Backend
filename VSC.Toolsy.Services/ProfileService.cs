@@ -55,15 +55,11 @@ namespace VSC.Toolsy.Services
                 throw new UnauthorizedException("Invalid Credentials");
             }
 
-            if (!profileFromDb.Role.Equals(loginRequestDto.Role))
-            {
-                throw new UnauthorizedAccessException($"You don't have an account with the role {loginRequestDto.Role}.");
-            }
-
             if (!BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, profileFromDb.PasswordHash))
             {
                 throw new UnauthorizedException($"Password Is MisMatched");
             }
+
 
             return await GenerateJwtToken(profileFromDb);
         }
@@ -101,8 +97,12 @@ namespace VSC.Toolsy.Services
                 new Claim(ClaimTypes.Name, profile.FirstName),
                 new Claim(ClaimTypes.NameIdentifier, profile.Email),
                 new Claim(ClaimTypes.Email, profile.Email),
-                new Claim(ClaimTypes.Role,profile.Role.ToString()),
             };
+
+            foreach (var role in profile.Roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
+            }
 
             JwtSecurityToken tokenDescriptor = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],

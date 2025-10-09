@@ -51,7 +51,8 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
 
         public DateTime? PhoneVerifiedAt { get; set; }
 
-        public Role Role { get; set; } = Role.User;
+        [JsonProperty]
+        public List<UserRole> Roles { get; set; }
 
         [JsonIgnore]
         public Address? Address { get; set; }

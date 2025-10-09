@@ -37,7 +37,7 @@ namespace VSC.Toolsy.Services
                 profileFromDb.Address.State = addressRegisterDto.State;
                 profileFromDb.Address.PostalCode = addressRegisterDto.PostalCode;
                 profileFromDb.Address.Country = addressRegisterDto.Country;
-                profileFromDb.UpdatedBy = profileFromDb.Role.ToString();
+                profileFromDb.UpdatedBy = profileFromDb.Roles.ToString();
                 profileFromDb.UpdatedAt = DateTime.UtcNow;
 
                 int result = await _profileRepository.UpdateAsync(profileFromDb);

@@ -20,7 +20,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status200OK)] // OK - 200 status code 
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status401Unauthorized)] // Not Found - 404 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status403Forbidden)] // Not Found - 404 status code

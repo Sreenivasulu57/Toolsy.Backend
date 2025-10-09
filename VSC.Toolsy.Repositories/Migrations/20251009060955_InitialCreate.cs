@@ -41,7 +41,8 @@ namespace VSC.Toolsy.Repositories.Migrations
                     VerificationStatus = table.Column<int>(type: "int", nullable: false),
                     EmailVerifiedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     PhoneVerifiedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Role = table.Column<int>(type: "int", nullable: false),
+                    Roles = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -226,11 +227,11 @@ namespace VSC.Toolsy.Repositories.Migrations
 
             migrationBuilder.InsertData(
                 table: "Profile",
-                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DateOfBirth", "DeletedAt", "DeletedBy", "Email", "EmailVerifiedAt", "FirstName", "Gender", "IsActive", "IsDeleted", "LastName", "PasswordHash", "PhoneNumber", "PhoneVerifiedAt", "ProfileImageUrl", "Role", "Status", "UpdatedAt", "UpdatedBy", "VerificationStatus" },
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DateOfBirth", "DeletedAt", "DeletedBy", "Email", "EmailVerifiedAt", "FirstName", "Gender", "IsActive", "IsDeleted", "LastName", "PasswordHash", "PhoneNumber", "PhoneVerifiedAt", "ProfileImageUrl", "Roles", "Status", "UpdatedAt", "UpdatedBy", "VerificationStatus" },
                 values: new object[,]
                 {
-                    { new Guid("a0b5d923-fd53-4a68-913b-7a6db1061e4d"), new DateTime(2025, 10, 1, 5, 2, 48, 361, DateTimeKind.Utc).AddTicks(4908), null, new DateTime(1985, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "admin1@example.com", new DateTime(2025, 10, 1, 10, 32, 48, 672, DateTimeKind.Local).AddTicks(929), "Admin1", 0, true, false, "Admin1", "$2a$11$95BzJkPeSXwKw0pK/PEVrOYsGPPyBWd9X.VgXTmGRqLUQNaNwpL12", "1234567890", new DateTime(2025, 10, 1, 10, 32, 48, 672, DateTimeKind.Local).AddTicks(2007), "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin1", 1, 1, null, null, 1 },
-                    { new Guid("b1c1e599-59c1-4b3d-b707-5aab9d3f38db"), new DateTime(2025, 10, 1, 5, 2, 48, 672, DateTimeKind.Utc).AddTicks(2955), null, new DateTime(1986, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "admin2@example.com", new DateTime(2025, 10, 1, 10, 32, 48, 852, DateTimeKind.Local).AddTicks(9042), "Admin2", 1, true, false, "Admin2", "$2a$11$z7AKN5/prbTtjAPBfVMxpOAkTJOVO3YK75AoDFy0f2ghMV9cGJWRu", "0987654321", new DateTime(2025, 10, 1, 10, 32, 48, 852, DateTimeKind.Local).AddTicks(9069), "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin2", 1, 1, null, null, 1 }
+                    { new Guid("a0b5d923-fd53-4a68-913b-7a6db1061e4d"), new DateTime(2025, 10, 9, 6, 9, 54, 504, DateTimeKind.Utc).AddTicks(1153), null, new DateTime(1985, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "admin1@example.com", new DateTime(2025, 10, 9, 11, 39, 54, 787, DateTimeKind.Local).AddTicks(1895), "Admin1", 0, true, false, "Admin1", "$2a$11$ipfB1vCXtjOGx/bJOcYbmuLrEolh8QAPIpfc5ezr8j47sFsszFQ5G", "1234567890", new DateTime(2025, 10, 9, 11, 39, 54, 787, DateTimeKind.Local).AddTicks(2290), "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin1", "[1]", 1, null, null, 1 },
+                    { new Guid("b1c1e599-59c1-4b3d-b707-5aab9d3f38db"), new DateTime(2025, 10, 9, 6, 9, 54, 787, DateTimeKind.Utc).AddTicks(2677), null, new DateTime(1986, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "admin2@example.com", new DateTime(2025, 10, 9, 11, 39, 54, 933, DateTimeKind.Local).AddTicks(4783), "Admin2", 1, true, false, "Admin2", "$2a$11$uMJ7/M0RuOin2iPXFhWBpeGnapzivIYFHVl/rEVOSGVN/tNId3CG2", "0987654321", new DateTime(2025, 10, 9, 11, 39, 54, 933, DateTimeKind.Local).AddTicks(4796), "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin2", "[1]", 1, null, null, 1 }
                 });
 
             migrationBuilder.CreateIndex(

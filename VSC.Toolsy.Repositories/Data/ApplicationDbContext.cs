@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Models.CoreEntites;
 
@@ -34,9 +37,24 @@ namespace VSC.Toolsy.Repositories.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            var rolesConverter = new ValueConverter<List<UserRole>, string>(
+         v => JsonConvert.SerializeObject(v),
+         v => JsonConvert.DeserializeObject<List<UserRole>>(v)
+     );
 
-            // Seeding two admin profiles
+            var rolesComparer = new ValueComparer<List<UserRole>>(
+                (c1, c2) => c1.SequenceEqual(c2), 
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList() 
+            );
+
+            modelBuilder.Entity<Profile>()
+                .Property(p => p.Roles)
+                .HasConversion(rolesConverter)
+                .Metadata
+                .SetValueComparer(rolesComparer);
+
+            
             modelBuilder.Entity<Profile>().HasData(
                new Profile
                {
@@ -51,7 +69,7 @@ namespace VSC.Toolsy.Repositories.Data
                    ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin1",
                    Status = AccountStatus.Active,
                    VerificationStatus = VerificationStatus.Verified,
-                   Role = Role.Admin,
+                   Roles = new List<UserRole> { UserRole.Admin},
                    IsActive = true,
                    EmailVerifiedAt = DateTime.Now,
                    PhoneVerifiedAt = DateTime.Now
@@ -69,11 +87,14 @@ namespace VSC.Toolsy.Repositories.Data
                 ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin2",
                 Status = AccountStatus.Active,
                 VerificationStatus = VerificationStatus.Verified,
-                Role = Role.Admin,
+                Roles = new List<UserRole> { UserRole.Admin },
                 IsActive = true,
                 EmailVerifiedAt = DateTime.Now,
                 PhoneVerifiedAt = DateTime.Now
             });
+
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Profile> Profiles { get; set; }
