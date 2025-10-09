@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VSC.Toolsy.Common.Constants;
+using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 
 namespace VSC.Toolsy.Server.Controllers
 {
     [ApiController]
     [Route(RouteMap.Email.Base)]
+    [Authorize(policy: nameof(Policy.AUTHENTICATED_PROFILE))]
     public class EmailController : ControllerBase
     {
         private readonly IEmailService _emailService;
