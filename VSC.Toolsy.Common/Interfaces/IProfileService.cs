@@ -5,10 +5,9 @@ namespace VSC.Toolsy.Common.Interfaces
 {
     public interface IProfileService
     {
-        public Task<Profile> GetProfileByEmailAsync(string ProfileEmail);
+        Task<Profile> GetProfileByEmailAsync(string ProfileEmail);
         Task<Profile> GetProfileWithAddressByEmailAsync(string email);
-        Task<string> ProfileLoginAsync(LoginRequestDto loginRequestDto);
-        public Task<Profile> GetByProfileId(Guid ProfileId);
+        Task<Profile> GetByProfileId(Guid ProfileId);
         Task<Profile> GetProfileWithAddressByProfileId(Guid ProfileId);
     }
 }

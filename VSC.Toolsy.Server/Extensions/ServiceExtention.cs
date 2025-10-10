@@ -39,7 +39,8 @@ namespace VSC.Toolsy.Server.Extensions
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IStorageService, LocalStorageService>();
             services.AddScoped<IMediaService, MediaService>();
-
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             string redisConnectionString = configurationManager["Redis:ConnectionString"] ?? throw new Exception("Redis ConnectionString Is Null");
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionString);

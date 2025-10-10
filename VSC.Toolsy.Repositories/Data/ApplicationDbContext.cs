@@ -37,15 +37,15 @@ namespace VSC.Toolsy.Repositories.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var rolesConverter = new ValueConverter<List<UserRole>, string>(
+            ValueConverter rolesConverter = new ValueConverter<List<UserRole>, string>(
          v => JsonConvert.SerializeObject(v),
          v => JsonConvert.DeserializeObject<List<UserRole>>(v)
      );
 
-            var rolesComparer = new ValueComparer<List<UserRole>>(
-                (c1, c2) => c1.SequenceEqual(c2), 
+            ValueComparer rolesComparer = new ValueComparer<List<UserRole>>(
+                (c1, c2) => c1.SequenceEqual(c2),
                 c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                c => c.ToList() 
+                c => c.ToList()
             );
 
             modelBuilder.Entity<Profile>()
@@ -54,7 +54,13 @@ namespace VSC.Toolsy.Repositories.Data
                 .Metadata
                 .SetValueComparer(rolesComparer);
 
-            
+            modelBuilder.Entity<Profile>()
+                .HasOne(p => p.RefreshToken)
+                .WithOne(rt => rt.profile)
+                .HasForeignKey<RefreshToken>(rt => rt.ProfileId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
             modelBuilder.Entity<Profile>().HasData(
                new Profile
                {
@@ -69,7 +75,7 @@ namespace VSC.Toolsy.Repositories.Data
                    ProfileImageUrl = "https://chatgpt.com/c/68d61034-1b68-8327-95e8-27a53e3f858cadmin1",
                    Status = AccountStatus.Active,
                    VerificationStatus = VerificationStatus.Verified,
-                   Roles = new List<UserRole> { UserRole.Admin},
+                   Roles = new List<UserRole> { UserRole.Admin },
                    IsActive = true,
                    EmailVerifiedAt = DateTime.Now,
                    PhoneVerifiedAt = DateTime.Now
@@ -108,5 +114,7 @@ namespace VSC.Toolsy.Repositories.Data
         public DbSet<ToolImage> ToolImages { get; set; }
 
         public DbSet<SigningKey> SigningKeys { get; set; }
+
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

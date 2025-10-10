@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Models.BaseEntites;
 
@@ -52,10 +53,14 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
         public DateTime? PhoneVerifiedAt { get; set; }
 
         [JsonProperty]
-        public List<UserRole> Roles { get; set; }
+        public required List<UserRole> Roles { get; set; }
 
         [JsonIgnore]
         public Address? Address { get; set; }
 
+        [JsonIgnore]
+        public  RefreshToken? RefreshToken ;
+
     }
 }
+
