@@ -41,6 +41,24 @@ namespace VSC.Toolsy.Repositories.implementation
                 return await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<RefreshToken>> GetAllAsync()
+        {
+            using (ApplicationDbContext _context = new ApplicationDbContext())
+            {
+                return await _context.RefreshTokens.ToListAsync();
+            }
+        }
+
+        public async Task<RefreshToken> GetByTokenAsync(string refreshToken)
+        {
+            using (ApplicationDbContext _context = new ApplicationDbContext())
+            {
+                List<RefreshToken> refreshTokensFromDb = await GetAllAsync();
+
+                return refreshTokensFromDb.FirstOrDefault(t => BCrypt.Net.BCrypt.Verify(refreshToken, t.Token));
+            }
+        }
     }
 }
 

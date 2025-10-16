@@ -1,6 +1,4 @@
-﻿
-
-namespace VSC.Toolsy.Common.Constants
+﻿namespace VSC.Toolsy.Common.Constants
 {
     public static class RouteMap
     {
@@ -68,6 +66,15 @@ namespace VSC.Toolsy.Common.Constants
             public const string Save = "save";
             public const string DeleteByProfileId = "delete-user-by-profileid";
             public const string Update = "update";
+            public const string ById = "by-id";
+        }
+
+        public static class Auth
+        {
+            public const string Base = RouteMap.Base + "auth";
+            public const string login = "login";
+            public const string refresh = "refresh";
+            public const string logout = "logout";
         }
     }
 }

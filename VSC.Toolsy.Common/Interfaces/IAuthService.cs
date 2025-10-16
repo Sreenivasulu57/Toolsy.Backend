@@ -6,8 +6,10 @@ namespace VSC.Toolsy.Common.Interfaces
 {
     public interface IAuthService
     {
-        Task<TokenResponseDto> ProfileLoginAsync(LoginRequestDto loginRequestDto);
+        Task<string> ProfileLoginAsync(LoginRequestDto loginRequestDto);
 
-        Task<TokenResponseDto> RefreshTokenAsync(RefreshTokenRequestDTO refreshTokenRequestDTO);
+        Task<string> RefreshTokenAsync();
+
+         Task<bool> LogoutAsync();
     }
 }

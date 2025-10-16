@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -21,17 +24,20 @@ namespace VSC.Toolsy.Services
         private readonly ISigningKeyRepository _signingKeyRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AuthService(IProfileService profileService, IProfileRepository profileRepository,
-            ISigningKeyRepository signingKeyRepository, IConfiguration configuration, IRefreshTokenRepository refreshTokenRepository)
+            ISigningKeyRepository signingKeyRepository, IConfiguration configuration, 
+            IRefreshTokenRepository refreshTokenRepository, IHttpContextAccessor httpContextAccessor)
         {
             _profileService = profileService;
             _profileRepository = profileRepository;
             _signingKeyRepository = signingKeyRepository;
             _configuration = configuration;
             _refreshTokenRepository = refreshTokenRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<TokenResponseDto> ProfileLoginAsync(LoginRequestDto loginRequestDto)
+        public async Task<string> ProfileLoginAsync(LoginRequestDto loginRequestDto)
         {
             Profile? profileFromDb = loginRequestDto.Type switch
             {
@@ -57,21 +63,28 @@ namespace VSC.Toolsy.Services
             if (existingToken != null)
             {
                 existingToken.Token = hashedRefreshToken;
-                existingToken.ExpiresAt = DateTime.UtcNow.AddDays(Convert.ToDouble(_configuration["Jwt:RefreshTokenExpiryDays"] ?? "30"));
+                existingToken.ExpiresAt = DateTime.UtcNow.AddDays(Convert.ToDouble(_configuration["Jwt:RefreshTokenExpiryDays"] ?? "37"));
                 existingToken.CreatedAt = DateTime.UtcNow;
                 existingToken.IsRevoked = false;
                 await _refreshTokenRepository.UpdateAsync(existingToken);
             }
             else
             {
+                refreshToken.Token = hashedRefreshToken;
                 await _refreshTokenRepository.SaveAsync(refreshToken);
             }
 
-            return new TokenResponseDto
-            {
-                Token = jwtToken,
-                RefreshToken = refreshToken.Token
-            };
+            //CookieOptions cookieOptions = new CookieOptions
+            //{
+            //    HttpOnly = true,
+            //    Secure = false,
+            //    SameSite = SameSiteMode.Strict,
+            //    Expires = DateTime.UtcNow.AddDays(37)
+            //};
+
+            //_httpContextAccessor.HttpContext!.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+
+            return jwtToken;
         }
 
         private async Task<string> GenerateJwtToken(Profile profile)
@@ -99,6 +112,7 @@ namespace VSC.Toolsy.Services
                 new Claim(ClaimTypes.Name, profile.FirstName),
                 new Claim(ClaimTypes.NameIdentifier, profile.Email),
                 new Claim(ClaimTypes.Email, profile.Email),
+                new Claim(ClaimTypes.PrimarySid, profile.Id.ToString())
             };
 
             foreach (var role in profile.Roles)
@@ -133,29 +147,84 @@ namespace VSC.Toolsy.Services
 
             return refreshToken;
         }
-
-        public async Task<TokenResponseDto> RefreshTokenAsync(RefreshTokenRequestDTO refreshTokenRequestDTO)
+        private bool IsRefreshTokenNearExpiry(RefreshToken token, int daysBeforeExpiry = 7)
         {
-            RefreshToken refreshToken = await _refreshTokenRepository.GetByProfileIdAsync(refreshTokenRequestDTO.ProfileId);
+            if (token == null) return true; 
+            TimeSpan remainingTime = token.ExpiresAt - DateTime.UtcNow;
+            return remainingTime.TotalDays <= daysBeforeExpiry;
+        }
 
-            if (refreshTokenRequestDTO == null || string.IsNullOrWhiteSpace(refreshTokenRequestDTO.RefreshToken) || refreshToken == null)
+
+        public async Task<string> RefreshTokenAsync()
+        {
+            string? refreshTokenFromCookie = _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(refreshTokenFromCookie))
+
+                throw new UnauthorizedException("Refresh token is missing.");
+
+            RefreshToken refreshTokenFromDb = await _refreshTokenRepository.GetByTokenAsync(refreshTokenFromCookie);
+
+            if (refreshTokenFromCookie == null || string.IsNullOrWhiteSpace(refreshTokenFromCookie) || refreshTokenFromDb == null)
             {
                 throw new UnauthorizedException("RefreshToken is required");
             }
-            if (refreshToken.IsRevoked || refreshToken.ExpiresAt < DateTime.UtcNow)
+            if (refreshTokenFromDb.IsRevoked || refreshTokenFromDb.ExpiresAt < DateTime.UtcNow)
             {
                 throw new UnauthorizedException("Token is expired or revoked");
             }
 
-            Profile profileFromDb = await _profileService.GetByProfileId(refreshTokenRequestDTO.ProfileId);
+            Profile profileFromDb = await _profileService.GetByProfileId(refreshTokenFromDb.ProfileId);
 
-            string newJwtToken = await GenerateJwtToken(profileFromDb);
-
-            return new TokenResponseDto
+            if (IsRefreshTokenNearExpiry(refreshTokenFromDb, 7))
             {
-                Token = newJwtToken,
-                RefreshToken = refreshTokenRequestDTO.RefreshToken
+                refreshTokenFromDb.IsRevoked = true;
+                await _refreshTokenRepository.UpdateAsync(refreshTokenFromDb);
+
+                _httpContextAccessor.HttpContext?.Response.Cookies.Delete("refreshToken");
+
+                throw new UnauthorizedAccessException("Refresh token is near expiry. Please login again.");
+            }
+
+            return  await GenerateJwtToken(profileFromDb);
+
+        }
+
+        public async Task<bool> LogoutAsync()
+        {
+            string? refreshTokenInHttpCookie = _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"];
+
+            bool flag = false;
+
+            if (!string.IsNullOrEmpty(refreshTokenInHttpCookie))
+            {
+                RefreshToken tokenFromDb = await _refreshTokenRepository.GetByTokenAsync(refreshTokenInHttpCookie);
+
+                bool tokenIsPresent = BCrypt.Net.BCrypt.Verify(refreshTokenInHttpCookie, tokenFromDb.Token);
+
+                if (tokenIsPresent )
+                {
+                    tokenFromDb.IsRevoked = true;
+                    tokenFromDb.RevokedAt = DateTime.UtcNow;
+                   int res = await _refreshTokenRepository.UpdateAsync(tokenFromDb);
+                    if (res > 0)
+                    {
+                        flag = true;
+                    }
+                }
+            }
+
+            CookieOptions cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false,                   
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(-1) 
             };
+
+            _httpContextAccessor.HttpContext!.Response.Cookies.Append("refreshToken", "", cookieOptions);
+            
+            return flag;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using VSC.Toolsy.Common.DTOs.Requests;
+using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
@@ -14,7 +15,7 @@ namespace VSC.Toolsy.Services
         private readonly IProfileService _profileService;
         private readonly string _defaultImage;
 
-        public UserService(IProfileRepository profileRepository, IProfileService profileService,IConfiguration config)
+        public UserService(IProfileRepository profileRepository, IProfileService profileService, IConfiguration config)
         {
             _profileRepository = profileRepository;
             _profileService = profileService;
@@ -51,9 +52,8 @@ namespace VSC.Toolsy.Services
 
         public async Task<Profile> GetProfileWithAddressByProfileId(Guid profileId)
             => await _profileService.GetProfileWithAddressByProfileId(profileId);
-
         public async Task<Profile> GetByProfileId(Guid profileId)
-            => await _profileRepository.GetByProfileId(profileId);
+            =>  await _profileService.GetByProfileId(profileId);
 
         public async Task<Profile> SaveAsync(RegisterUserDto registerUserDto)
         {
@@ -68,7 +68,7 @@ namespace VSC.Toolsy.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password),
                 ProfileImageUrl = _defaultImage,
                 CreatedBy = registerUserDto.Email,
-                Roles = new List<UserRole> { UserRole.User}
+                Roles = new List<UserRole> { UserRole.User }
             };
 
             int result = await _profileRepository.SaveAsync(user);
@@ -102,11 +102,33 @@ namespace VSC.Toolsy.Services
                 throw new Exception("Internal Server Error");
             }
             return userFromDb;
-
-
         }
 
         public async Task<int> UpdateUserAsync(Profile userFromDb)
             => await _profileRepository.UpdateAsync(userFromDb);
+
+        public async Task<UserResposeDto> getProfileById(string profileIdString)
+        {
+            if (string.IsNullOrWhiteSpace(profileIdString))
+                throw new ArgumentException("Profile ID cannot be null or empty");
+
+            if (!Guid.TryParse(profileIdString, out Guid profileId))
+                throw new ArgumentException("Invalid Profile ID format");
+
+            Profile profileFromDb = await _profileService.GetByProfileId(profileId);
+
+            if (profileFromDb == null) return null;
+            return new UserResposeDto
+            {
+                profileId = profileFromDb.Id.ToString(),
+                FirstName = profileFromDb.FirstName,
+                LastName = profileFromDb.LastName,
+                Email = profileFromDb.Email,
+                PhoneNumber = profileFromDb.PhoneNumber,
+                DateOfBirth = profileFromDb.DateOfBirth,
+                Gender = profileFromDb.Gender,
+                ProfileImageUrl = profileFromDb.ProfileImageUrl,
+            };
+        }
     }
 }

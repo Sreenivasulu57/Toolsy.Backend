@@ -18,13 +18,18 @@ namespace VSC.Toolsy.Server.Extensions
     {
         public static void RegisterServices(this IServiceCollection services, ConfigurationManager configurationManager)
         {
-
+            // -------------------------
+            // Logging
+            // -------------------------
             services.AddLogging(logging =>
-             {
-                 logging.AddConsole();
-                 logging.SetMinimumLevel(LogLevel.Trace);// Trace, Debug, Info, Warn, Error, Critical
-             });
+            {
+                logging.AddConsole();
+                logging.SetMinimumLevel(LogLevel.Trace);
+            });
 
+            // -------------------------
+            // Core Services & Repositories
+            // -------------------------
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IAdminService, AdminService>();
@@ -41,27 +46,57 @@ namespace VSC.Toolsy.Server.Extensions
             services.AddScoped<IMediaService, MediaService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.MinimumSameSitePolicy = SameSiteMode.Strict;
+                options.Secure = CookieSecurePolicy.Always;
+            });
 
-            string redisConnectionString = configurationManager["Redis:ConnectionString"] ?? throw new Exception("Redis ConnectionString Is Null");
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionString);
+            // -------------------------
+            // Conditionally Register Redis
+            // -------------------------
+            bool redisEnabled = configurationManager.GetValue<bool>("Redis:Enabled");
 
-            services.AddSingleton<IConnectionMultiplexer>(redis);
-            services.AddSingleton<IRedisCacheService, RedisCacheService>();
+            if (redisEnabled)
+            {
+                string redisConnectionString = configurationManager["Redis:ConnectionString"]
+                                               ?? throw new Exception("Redis ConnectionString Is Null");
 
+                Console.WriteLine("✅ Redis is enabled. Connecting...");
+
+                ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionString);
+                services.AddSingleton<IConnectionMultiplexer>(redis);
+                services.AddSingleton<IRedisCacheService, RedisCacheService>();
+            }
+            else
+            {
+                Console.WriteLine("⚠️ Redis is disabled. Using NoOpRedisCacheService.");
+                services.AddSingleton<IRedisCacheService, NoOpRedisCacheService>();
+            }
+
+            // -------------------------
+            // Hosted Services
+            // -------------------------
             services.AddHostedService<KeyRotationService>();
 
+            // -------------------------
+            // CORS Configuration
+            // -------------------------
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngular", policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:4200") // Angular dev server
+                        .WithOrigins("http://localhost:4200")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials(); // optional if you use cookies
+                        .AllowCredentials();
                 });
             });
 
+            // -------------------------
+            // Controllers & Swagger
+            // -------------------------
             services.AddControllers();
             services.AddEndpointsApiExplorer();
 
@@ -85,7 +120,6 @@ namespace VSC.Toolsy.Server.Extensions
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-
                 {
                     {
                         new OpenApiSecurityScheme
@@ -98,18 +132,18 @@ namespace VSC.Toolsy.Server.Extensions
                         },
                         new string[] {}
                     }
-                }
-                );
+                });
             });
 
-
+            // -------------------------
+            // Authentication & Authorization
+            // -------------------------
             services.AddAuthentication(options =>
             {
-
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            })
+            .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -122,13 +156,9 @@ namespace VSC.Toolsy.Server.Extensions
 
                     IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
                     {
-
                         var httpClient = new HttpClient();
-
                         var jwks = httpClient.GetStringAsync($"{configurationManager["Jwt:Issuer"]}/.well-known/jwks.json").Result;
-
                         var keys = new JsonWebKeySet(jwks);
-
                         return keys.Keys;
                     }
                 };
@@ -136,42 +166,32 @@ namespace VSC.Toolsy.Server.Extensions
 
             services.AddAuthorization(options =>
             {
-
                 options.AddPolicy(Policy.USER_ONLY.ToString(), policy =>
-                {
-                    policy.RequireRole(RoleRequire.User.ToString());
-                });
+                    policy.RequireRole(RoleRequire.User.ToString()));
 
                 options.AddPolicy(Policy.OWNER_ONLY.ToString(), policy =>
-                {
-                    policy.RequireRole(RoleRequire.Owner.ToString());
-                });
+                    policy.RequireRole(RoleRequire.Owner.ToString()));
 
                 options.AddPolicy(Policy.ADMIN_ONLY.ToString(), policy =>
-                {
-                    policy.RequireRole(RoleRequire.Admin.ToString());
-                });
+                    policy.RequireRole(RoleRequire.Admin.ToString()));
 
                 options.AddPolicy(Policy.ADMIN_OR_OWNER.ToString(), policy =>
-                {
-                    policy.RequireRole(RoleRequire.Admin.ToString(), RoleRequire.Owner.ToString());
-                });
+                    policy.RequireRole(RoleRequire.Admin.ToString(), RoleRequire.Owner.ToString()));
 
                 options.AddPolicy(Policy.AUTHENTICATED_PROFILE.ToString(), policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                });
-
+                    policy.RequireAuthenticatedUser());
             });
 
-
+            // -------------------------
+            // Database Context
+            // -------------------------
             string connectionString = configurationManager
-                .GetConnectionString("DefaultConnection") ?? throw new Exception(" null in connectionString");
+                .GetConnectionString("DefaultConnection")
+                ?? throw new Exception("Null in connectionString");
 
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                );
-
+            );
         }
     }
 }
