@@ -23,11 +23,7 @@ namespace VSC.Toolsy.Services
 
         // This is for the Users only
         public async Task<Profile> GetByProfileId(Guid profileId)
-        {
-            Profile profile = await _profileRepository.GetByProfileId(profileId);
-
-            return profile;
-        }
+            => await _profileRepository.GetByProfileId(profileId);
 
         public async Task<Profile> GetProfileWithAddressByEmailAsync(string profileEmail)
             => await _profileRepository.GetProfileWithAddressByEmailAsync(profileEmail);
@@ -36,9 +32,7 @@ namespace VSC.Toolsy.Services
             => await _profileRepository.GetByEmailAsync(email);
 
         public async Task<Profile> GetProfileByPhoneNumberAsync(string phoneNumber)
-        {
-            return await _profileRepository.GetProfileByPhoneNumberAsync(phoneNumber);
-        }
+            => await _profileRepository.GetProfileByPhoneNumberAsync(phoneNumber);
 
         public async Task<Profile> GetProfileWithAddressByProfileId(Guid profileId)
             => await _profileRepository.GetProfileWithAddressByProfileId(profileId);

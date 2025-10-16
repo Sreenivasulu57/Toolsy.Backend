@@ -16,7 +16,6 @@ namespace VSC.Toolsy.Services
 
         public async Task<bool> ApproveProfileAccountAsync(Guid profileId)
         {
-
             Profile userFromDb = await _userService.GetByProfileId(profileId);
 
             if (userFromDb.VerificationStatus == VerificationStatus.Verified)

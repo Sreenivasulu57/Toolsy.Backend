@@ -17,15 +17,13 @@ namespace VSC.Toolsy.Services
         private readonly IProfileService _profileService;
         private readonly IEmailService _emailService;
         private readonly string _defaultImage;
-        public OwnerService(IOwnerRepository ownerRepository, IProfileRepository profileRepository, IProfileService profileService, IEmailService emailService,IConfiguration config)
+        public OwnerService(IOwnerRepository ownerRepository, IProfileRepository profileRepository, IProfileService profileService, IEmailService emailService, IConfiguration config)
         {
-
             _ownerRepository = ownerRepository;
             _profileRepository = profileRepository;
             _profileService = profileService;
             _emailService = emailService;
             _defaultImage = config["UserSettings:DefaultProfileImage"];
-
         }
 
         public async Task<OwnerResponseDto> GetOwnerByEmailAsync(string email)
@@ -34,7 +32,6 @@ namespace VSC.Toolsy.Services
 
             Owner ownerFromDb = await _ownerRepository.GetByProfileId(profileFromDb.Id);
 
-
             return MapToOwnerResponseDto(profileFromDb, ownerFromDb);
         }
 
@@ -42,9 +39,7 @@ namespace VSC.Toolsy.Services
         {
             Profile profileFromDb = await _profileService.GetProfileWithAddressByProfileId(profileId);
 
-
             Owner ownerFromDb = await _ownerRepository.GetByProfileId(profileFromDb.Id);
-
 
             return MapToOwnerResponseDto(profileFromDb, ownerFromDb);
         }
@@ -76,10 +71,8 @@ namespace VSC.Toolsy.Services
             };
         }
 
-
         public async Task<Owner> GetOwnerWithProfileByOwerId(Guid ownerId)
         {
-
             Owner ownerFromDb = await _ownerRepository.GetByIdWithProfileAsync(ownerId);
 
             return ownerFromDb;
@@ -102,7 +95,6 @@ namespace VSC.Toolsy.Services
                 Roles = new List<UserRole> { UserRole.Owner },
 
                 CreatedBy = UserRole.Owner.ToString()
-
             };
 
             int result = await _profileRepository.SaveAsync(ownerProfile);
@@ -129,7 +121,6 @@ namespace VSC.Toolsy.Services
             }
 
             throw new Exception("Internal Server Error");
-
         }
 
         public async Task<OwnerResponseDto> GetOwnerByOwnerId(Guid ownerId)

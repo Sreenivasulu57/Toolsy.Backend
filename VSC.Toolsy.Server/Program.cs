@@ -3,6 +3,8 @@ using VSC.Toolsy.Server.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.RegisterServices(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
+
 
 WebApplication app = builder.Build();
 
@@ -12,6 +14,8 @@ app.UseCors("AllowAngular");
 
 if (app.Environment.IsDevelopment())
 {
+
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

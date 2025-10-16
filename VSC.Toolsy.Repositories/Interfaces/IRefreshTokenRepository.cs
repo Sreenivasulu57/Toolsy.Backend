@@ -14,5 +14,9 @@ namespace VSC.Toolsy.Repositories.Interfaces
         Task<int> UpdateAsync(RefreshToken refreshToken);
 
         Task<RefreshToken?> GetByProfileIdAsync(Guid profileId);
+
+        Task<List<RefreshToken>> GetAllAsync();
+
+        Task<RefreshToken> GetByTokenAsync(string refreshToken);
     }
 }

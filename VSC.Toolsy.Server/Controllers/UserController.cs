@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using VSC.Toolsy.Common.Constants;
 using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
@@ -15,10 +17,12 @@ namespace VSC.Toolsy.Server.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpPost(RouteMap.User.Save)]
@@ -39,23 +43,27 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<Profile>.SuccessResponse(null, "Added Succesfully"));
         }
 
-        [HttpGet]
+        [HttpGet(RouteMap.User.ById)]
         [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
-        public async Task<IActionResult> GetByProfileId(Guid profileId)
+        public async Task<IActionResult> GetByProfileId()
         {
 
+            string profileIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value;
 
-            Profile userFromDb = await _userService.GetProfileWithAddressByProfileId(profileId);
+            _logger.LogInformation(profileIdClaim);
 
-            if (userFromDb == null)
-            {
+            if (string.IsNullOrWhiteSpace(profileIdClaim))
+                return NotFound(ApiResponseDto<string>.FailureResponse("Profile ID not found in token."));
+
+            var userDto = await _userService.getProfileById(profileIdClaim);
+
+            if (userDto == null)
                 return NotFound(ApiResponseDto<string>.FailureResponse("User not found."));
-            }
 
-            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "GetUserByEmail"));
+            return Ok(ApiResponseDto<UserResposeDto>.SuccessResponse(userDto, "User fetched successfully."));
         }
 
         [HttpPut(RouteMap.User.DeleteByProfileId)]
