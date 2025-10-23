@@ -16,3 +16,4 @@ namespace VSC.Toolsy.Common.Interfaces
         Task<UserResposeDto> getProfileById(string profileIdString);
     }
 }
+

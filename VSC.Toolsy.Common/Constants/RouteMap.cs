@@ -72,9 +72,52 @@
         public static class Auth
         {
             public const string Base = RouteMap.Base + "auth";
-            public const string login = "login";
-            public const string refresh = "refresh";
-            public const string logout = "logout";
+            public const string Login = "login";
+            public const string Refresh = "refresh";
+            public const string Logout = "logout";
+        }
+
+        public static class ToolCategory
+        {
+            public const string Base = RouteMap.Base + "tool-category";
+            public const string Save = "save";
+            public const string Update = "update";
+            public const string Delete = "delete";
+            public const string GetById = "get-by-id";
+            public const string GetAll = "get-all";
+        }
+
+        public static class SubToolcategory
+        {
+            public const string Base = RouteMap.Base + "sub-tool-category";
+            public const string Save = "save";
+            public const string Update = "update";
+            public const string Delete = "delete";
+            public const string GetById = "get-by-id";
+            public const string GetAll = "get-all";
+        }
+
+        public static class ToolSpecification
+        {
+            public const string Base = RouteMap.Base + "tool-specification";
+            public const string Save = "save";
+            public const string Update = "update";
+            public const string Delete = "delete";
+            public const string GetById = "get-by-id";
+            public const string GetAll = "get-all";
+        }
+
+        public static class ToolAvailability
+        {
+            public const string Base = RouteMap.Base + "tool-availability";
+            public const string Save = "save";
+            public const string Update = "update";
+            public const string Delete = "delete";
+            public const string GetById = "get-by-id";
+            public const string GetAll = "get-all";
+
         }
     }
 }
+
+

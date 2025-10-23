@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace VSC.Toolsy.Common.Models.BaseEntites
 {
     public abstract class BaseEntity

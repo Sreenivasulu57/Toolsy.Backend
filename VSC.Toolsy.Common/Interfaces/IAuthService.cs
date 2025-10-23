@@ -10,6 +10,6 @@ namespace VSC.Toolsy.Common.Interfaces
 
         Task<string> RefreshTokenAsync();
 
-         Task<bool> LogoutAsync();
+        Task<bool> LogoutAsync();
     }
 }

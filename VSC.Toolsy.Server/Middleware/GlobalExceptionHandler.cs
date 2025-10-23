@@ -35,7 +35,9 @@ namespace VSC.Toolsy.Server.Middleware
                     case ToolNotFoundException toolNotFoundException:
                     case AddressNotFoundException addressNotFoundException:
                     case EmailNotFoundException emailNotFoundException:
-
+                    case ToolCategoryNotFoundException toolCategoryNotFoundException:
+                    case ToolSpecificationNotFoundException toolSpecificationNotFoundException:
+                    case ToolAvailabilityNotFoundException toolAvailabilityNotFoundException:
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
 

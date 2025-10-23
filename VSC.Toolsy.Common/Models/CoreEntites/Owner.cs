@@ -19,6 +19,7 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
         [StringLength(50)]
         public string? BusinessRegistrationNumber { get; set; }
 
+
         [JsonIgnore]
         public Profile? Profile { get; set; }
 

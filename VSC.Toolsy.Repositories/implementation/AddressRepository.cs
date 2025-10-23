@@ -30,7 +30,7 @@ namespace VSC.Toolsy.Repositories.implementation
         {
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
-                return context.Addresses.ToList();
+                return context.Addresses.Where(a => !a.ProfileId.Equals(Guid.Empty)).ToList();
             }
         }
 
@@ -38,7 +38,7 @@ namespace VSC.Toolsy.Repositories.implementation
         {
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
-                return await context.Addresses.ToListAsync();
+                return await context.Addresses.Where(a => !a.ProfileId.Equals(Guid.Empty)).ToListAsync();
             }
         }
 

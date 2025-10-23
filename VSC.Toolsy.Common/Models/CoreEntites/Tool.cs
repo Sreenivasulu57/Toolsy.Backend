@@ -10,7 +10,6 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
     [Table(name: "Tool")]
     public class Tool : AuditableEntity
     {
-
         [Required]
         [StringLength(200)]
         public string Name { get; set; } = string.Empty;
@@ -58,10 +57,19 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
 
         public string? SafetyInstructions { get; set; }
 
+
         public required Guid OwnerId { get; set; }
+
+        public required  Guid ToolCategoryId { get; set; }
+
+        [JsonIgnore]
+        public  ToolCategory ToolCategory { get; set; }
 
         public List<ToolImage> ToolImages { get; set; } = new List<ToolImage>();
 
+        public List<ToolSpecification> ToolSpecifications { get; set; } = new List<ToolSpecification>();
+
+        public List<ToolAvailability> ToolAvailabilities { get; set; } = new List<ToolAvailability>();
 
     }
 }

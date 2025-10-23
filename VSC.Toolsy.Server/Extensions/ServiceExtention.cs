@@ -18,18 +18,12 @@ namespace VSC.Toolsy.Server.Extensions
     {
         public static void RegisterServices(this IServiceCollection services, ConfigurationManager configurationManager)
         {
-            // -------------------------
-            // Logging
-            // -------------------------
             services.AddLogging(logging =>
             {
                 logging.AddConsole();
                 logging.SetMinimumLevel(LogLevel.Trace);
             });
 
-            // -------------------------
-            // Core Services & Repositories
-            // -------------------------
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IAdminService, AdminService>();
@@ -46,15 +40,13 @@ namespace VSC.Toolsy.Server.Extensions
             services.AddScoped<IMediaService, MediaService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.MinimumSameSitePolicy = SameSiteMode.Strict;
-                options.Secure = CookieSecurePolicy.Always;
-            });
+            services.AddScoped<IToolCategoryRepository, ToolCategoryRepository>();
+            services.AddScoped<IToolSpecificationRepository, ToolSpecificationRepository>();
+            services.AddScoped<IToolAvailabilityRepository, ToolAvailabilityRepository>();
+            services.AddScoped<IToolCategoryService, ToolCategoryService>();
+            services.AddScoped<IToolAvailabilityService, ToolAvailabilityService>();
+            services.AddScoped<IToolSpecificationService,ToolSpecificationService>();
 
-            // -------------------------
-            // Conditionally Register Redis
-            // -------------------------
             bool redisEnabled = configurationManager.GetValue<bool>("Redis:Enabled");
 
             if (redisEnabled)
@@ -62,7 +54,6 @@ namespace VSC.Toolsy.Server.Extensions
                 string redisConnectionString = configurationManager["Redis:ConnectionString"]
                                                ?? throw new Exception("Redis ConnectionString Is Null");
 
-                Console.WriteLine("✅ Redis is enabled. Connecting...");
 
                 ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionString);
                 services.AddSingleton<IConnectionMultiplexer>(redis);
@@ -70,33 +61,23 @@ namespace VSC.Toolsy.Server.Extensions
             }
             else
             {
-                Console.WriteLine("⚠️ Redis is disabled. Using NoOpRedisCacheService.");
                 services.AddSingleton<IRedisCacheService, NoOpRedisCacheService>();
             }
 
-            // -------------------------
-            // Hosted Services
-            // -------------------------
             services.AddHostedService<KeyRotationService>();
 
-            // -------------------------
-            // CORS Configuration
-            // -------------------------
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngular", policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:4200")
+                        .WithOrigins("https://localhost:4200")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
                 });
             });
 
-            // -------------------------
-            // Controllers & Swagger
-            // -------------------------
             services.AddControllers();
             services.AddEndpointsApiExplorer();
 
@@ -108,7 +89,6 @@ namespace VSC.Toolsy.Server.Extensions
                     Version = "v1"
                 });
 
-                // Add JWT Bearer Authentication to Swagger
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -135,9 +115,6 @@ namespace VSC.Toolsy.Server.Extensions
                 });
             });
 
-            // -------------------------
-            // Authentication & Authorization
-            // -------------------------
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -182,9 +159,6 @@ namespace VSC.Toolsy.Server.Extensions
                     policy.RequireAuthenticatedUser());
             });
 
-            // -------------------------
-            // Database Context
-            // -------------------------
             string connectionString = configurationManager
                 .GetConnectionString("DefaultConnection")
                 ?? throw new Exception("Null in connectionString");

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using VSC.Toolsy.Common.Constants;
 using VSC.Toolsy.Common.DTOs.Requests;
@@ -27,9 +26,9 @@ namespace VSC.Toolsy.Server.Controllers
 
         [HttpPost(RouteMap.User.Save)]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
+        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] 
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] 
         public async Task<IActionResult> SaveUser([FromBody] RegisterUserDto dto)
         {
 
@@ -44,10 +43,10 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpGet(RouteMap.User.ById)]
-        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] 
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] 
         public async Task<IActionResult> GetByProfileId()
         {
 
@@ -67,11 +66,10 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpPut(RouteMap.User.DeleteByProfileId)]
-        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status codecode
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
-
+        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] 
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] 
         public async Task<IActionResult> DeleteByProfileId(Guid profileId)
         {
             if (profileId == null)
@@ -90,10 +88,10 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpPut(RouteMap.User.Update)]
-        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] // OK - 200 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] // Bad Request - 400 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
+        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] 
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] 
         public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO, Guid profileId)
         {
 
@@ -116,3 +114,5 @@ namespace VSC.Toolsy.Server.Controllers
 
     }
 }
+
+
