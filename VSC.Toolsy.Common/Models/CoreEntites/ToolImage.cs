@@ -17,6 +17,7 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
 
         public bool IsPrimary { get; set; } = false;
 
+
         [Required]
         [JsonIgnore]
         public Guid ToolId { get; set; }

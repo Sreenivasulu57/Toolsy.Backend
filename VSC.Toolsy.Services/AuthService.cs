@@ -27,7 +27,7 @@ namespace VSC.Toolsy.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AuthService(IProfileService profileService, IProfileRepository profileRepository,
-            ISigningKeyRepository signingKeyRepository, IConfiguration configuration, 
+            ISigningKeyRepository signingKeyRepository, IConfiguration configuration,
             IRefreshTokenRepository refreshTokenRepository, IHttpContextAccessor httpContextAccessor)
         {
             _profileService = profileService;
@@ -74,15 +74,15 @@ namespace VSC.Toolsy.Services
                 await _refreshTokenRepository.SaveAsync(refreshToken);
             }
 
-            //CookieOptions cookieOptions = new CookieOptions
-            //{
-            //    HttpOnly = true,
-            //    Secure = false,
-            //    SameSite = SameSiteMode.Strict,
-            //    Expires = DateTime.UtcNow.AddDays(37)
-            //};
+            CookieOptions cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(37)
+            };
 
-            //_httpContextAccessor.HttpContext!.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+            _httpContextAccessor.HttpContext!.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
 
             return jwtToken;
         }
@@ -149,7 +149,7 @@ namespace VSC.Toolsy.Services
         }
         private bool IsRefreshTokenNearExpiry(RefreshToken token, int daysBeforeExpiry = 7)
         {
-            if (token == null) return true; 
+            if (token == null) return true;
             TimeSpan remainingTime = token.ExpiresAt - DateTime.UtcNow;
             return remainingTime.TotalDays <= daysBeforeExpiry;
         }
@@ -186,7 +186,7 @@ namespace VSC.Toolsy.Services
                 throw new UnauthorizedAccessException("Refresh token is near expiry. Please login again.");
             }
 
-            return  await GenerateJwtToken(profileFromDb);
+            return await GenerateJwtToken(profileFromDb);
 
         }
 
@@ -202,11 +202,11 @@ namespace VSC.Toolsy.Services
 
                 bool tokenIsPresent = BCrypt.Net.BCrypt.Verify(refreshTokenInHttpCookie, tokenFromDb.Token);
 
-                if (tokenIsPresent )
+                if (tokenIsPresent)
                 {
                     tokenFromDb.IsRevoked = true;
                     tokenFromDb.RevokedAt = DateTime.UtcNow;
-                   int res = await _refreshTokenRepository.UpdateAsync(tokenFromDb);
+                    int res = await _refreshTokenRepository.UpdateAsync(tokenFromDb);
                     if (res > 0)
                     {
                         flag = true;
@@ -217,13 +217,13 @@ namespace VSC.Toolsy.Services
             CookieOptions cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false,                   
+                Secure = false,
                 SameSite = SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddDays(-1) 
+                Expires = DateTime.UtcNow.AddDays(-1)
             };
 
             _httpContextAccessor.HttpContext!.Response.Cookies.Append("refreshToken", "", cookieOptions);
-            
+
             return flag;
         }
     }

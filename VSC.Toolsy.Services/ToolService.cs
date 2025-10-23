@@ -16,6 +16,7 @@ namespace VSC.Toolsy.Services
         {
             _ownerRepository = ownerRepository;
             _toolRepository = toolRepository;
+            
 
         }
 
@@ -33,8 +34,11 @@ namespace VSC.Toolsy.Services
                 })
                 .ToList();
 
+
             Tool tool = new Tool
             {
+                CreatedBy = UserRole.Owner.ToString(),
+                CreatedAt = DateTime.UtcNow,
                 Name = toolRequestDto.Name,
                 Description = toolRequestDto.Description,
                 Brand = toolRequestDto.Brand,
@@ -51,14 +55,12 @@ namespace VSC.Toolsy.Services
                 RequiresOperator = toolRequestDto.RequiresOperator,
                 OperatorRequirements = toolRequestDto.OperatorRequirements,
                 SafetyInstructions = toolRequestDto.SafetyInstructions,
+
+
                 ToolImages = toolImages,
-
-                CreatedBy = UserRole.Owner.ToString(),
-                CreatedAt = DateTime.UtcNow,
-
+                ToolCategoryId = toolRequestDto.ToolCategoryId,
                 OwnerId = ownerFromDb.Id
             };
-
 
             int result = await _toolRepository.SaveAsync(tool);
 

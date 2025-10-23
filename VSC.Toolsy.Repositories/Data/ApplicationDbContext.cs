@@ -60,6 +60,13 @@ namespace VSC.Toolsy.Repositories.Data
                 .HasForeignKey<RefreshToken>(rt => rt.ProfileId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<ToolCategory>()
+                .HasMany(c => c.SubCategories)
+                .WithOne(c => c.ParentCategory)
+                .HasForeignKey(c => c.ParentCategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
 
             modelBuilder.Entity<Profile>().HasData(
                new Profile
@@ -116,5 +123,11 @@ namespace VSC.Toolsy.Repositories.Data
         public DbSet<SigningKey> SigningKeys { get; set; }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+
+        public DbSet<ToolCategory> ToolCategories { get; set; }
+
+        public DbSet<ToolSpecification> ToolSpecifications { get; set; }
+
+        public DbSet<ToolAvailability> ToolAvailabilities { get; set; }
     }
 }

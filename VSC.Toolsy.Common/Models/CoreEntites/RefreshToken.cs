@@ -20,6 +20,7 @@ namespace VSC.Toolsy.Common.Models.CoreEntites
 
         public DateTime? RevokedAt { get; set; }
 
+
         [JsonIgnore]
         public Profile? profile { get; set; }
 

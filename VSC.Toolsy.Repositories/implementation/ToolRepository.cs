@@ -30,7 +30,7 @@ namespace VSC.Toolsy.Repositories.implementation
         {
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
-                return context.Tools.ToList();
+                return context.Tools.Where(t => !t.IsDeleted).ToList();
             }
         }
 
@@ -38,7 +38,7 @@ namespace VSC.Toolsy.Repositories.implementation
         {
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
-                return await context.Tools.ToListAsync();
+                return await context.Tools.Where(t => !t.IsDeleted).ToListAsync();
             }
         }
 
@@ -65,6 +65,7 @@ namespace VSC.Toolsy.Repositories.implementation
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 return await context.Tools
+                    .Where(t => !t.IsDeleted)
                      .Where(t => t.OwnerId.Equals(ownerId))
                      .Include(t => t.ToolImages)
                      .ToListAsync() ?? throw new OwnerNotFoundException($"Owner not found for this id :{ownerId}");
@@ -76,6 +77,7 @@ namespace VSC.Toolsy.Repositories.implementation
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 return await context.Tools
+                    .Where(t => !t.IsDeleted)
                     .Include(t => t.ToolImages)
                     .ToListAsync();
             }
@@ -86,6 +88,7 @@ namespace VSC.Toolsy.Repositories.implementation
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 return await context.Tools
+                    .Where(t => !t.IsDeleted)
                     .Where(t => t.Id.Equals(toolId))
                     .FirstOrDefaultAsync() ?? throw new ToolNotFoundException($"Tool this Id {toolId} is not found");
             }

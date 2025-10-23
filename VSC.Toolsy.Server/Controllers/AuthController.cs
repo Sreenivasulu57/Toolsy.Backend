@@ -23,12 +23,12 @@ namespace VSC.Toolsy.Server.Controllers
             _logger = logger;
         }
 
-        [HttpPost(RouteMap.Auth.login)]
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status200OK)] // OK - 200 status code 
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status401Unauthorized)] // Not Found - 404 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status403Forbidden)] // Not Found - 404 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
+        [HttpPost(RouteMap.Auth.Login)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status200OK)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status401Unauthorized)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status403Forbidden)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]  
         public async Task<IActionResult> ProfileLogin([FromBody] LoginRequestDto loginRequestDto)
         {
 
@@ -38,13 +38,13 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        
-        [HttpPost(RouteMap.Auth.refresh)]
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status200OK)] // OK - 200 status code 
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status401Unauthorized)] // Not Found - 404 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status403Forbidden)] // Not Found - 404 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
+
+        [HttpPost(RouteMap.Auth.Refresh)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status200OK)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status401Unauthorized)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status403Forbidden)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] 
         public async Task<IActionResult> RefreshTokenAsync()
         {
             string newJwtToken = await _authService.RefreshTokenAsync();
@@ -53,26 +53,23 @@ namespace VSC.Toolsy.Server.Controllers
 
         }
 
-        [HttpPost(RouteMap.Auth.logout)]
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status200OK)] // OK - 200 status code 
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status401Unauthorized)] // Not Found - 404 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status403Forbidden)] // Not Found - 404 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] // Not Found - 404 status code
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] // Internal Server Error - 500 status code 
+        [HttpPost(RouteMap.Auth.Logout)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status200OK)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status401Unauthorized)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status403Forbidden)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] 
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]  
         public async Task<IActionResult> LogOutAsync()
         {
 
             bool statusOfLogOut = await _authService.LogoutAsync();
 
-            if(statusOfLogOut)
-            {
+            if (statusOfLogOut)
                 return Ok(ApiResponseDto<string>.SuccessResponse(null, "Logged out Successfully"));
-            }
             else
-            {
                 return NotFound(ApiResponseDto<string>.FailureResponse("Failed to logout"));
-            }
 
         }
     }
 }
+

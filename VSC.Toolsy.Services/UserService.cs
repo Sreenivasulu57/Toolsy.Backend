@@ -53,7 +53,7 @@ namespace VSC.Toolsy.Services
         public async Task<Profile> GetProfileWithAddressByProfileId(Guid profileId)
             => await _profileService.GetProfileWithAddressByProfileId(profileId);
         public async Task<Profile> GetByProfileId(Guid profileId)
-            =>  await _profileService.GetByProfileId(profileId);
+            => await _profileService.GetByProfileId(profileId);
 
         public async Task<Profile> SaveAsync(RegisterUserDto registerUserDto)
         {

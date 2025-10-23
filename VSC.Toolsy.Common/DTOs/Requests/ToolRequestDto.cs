@@ -63,5 +63,6 @@ namespace VSC.Toolsy.Common.DTOs.Requests
         [Required(ErrorMessage = "At least one image is required.")]
         [MinLength(1, ErrorMessage = "At least one image must be provided.")]
         public required List<ToolImageRequestDto> Images { get; set; }
+        public required Guid ToolCategoryId { get; set; }
     }
 }
