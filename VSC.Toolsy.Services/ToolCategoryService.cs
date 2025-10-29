@@ -5,6 +5,7 @@ using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Exceptions;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
+using VSC.Toolsy.Common.Models.Pagination;
 using VSC.Toolsy.Repositories.Interfaces;
 
 namespace VSC.Toolsy.Services
@@ -72,7 +73,7 @@ namespace VSC.Toolsy.Services
             toolCategory.UpdatedAt = DateTime.UtcNow;
             toolCategory.UpdatedBy = UserRole.Admin.ToString();
 
-           int result = await _toolCategoryRepositoiry.UpdateAsync(toolCategory);
+            int result = await _toolCategoryRepositoiry.UpdateAsync(toolCategory);
 
             if (result <= 0)
                 throw new Exception("Internal server error");
@@ -97,7 +98,7 @@ namespace VSC.Toolsy.Services
                 ParentCategoryId = subToolCategoryRequestDto.ParentCategoryId,
                 CreatedBy = UserRole.Admin.ToString(),
             };
-            
+
             ToolCategory toolCategoryFromDb = await _toolCategoryRepositoiry.GetToolCategoryByParentId(subToolCategoryRequestDto.ParentCategoryId);
 
             int result = await _toolCategoryRepositoiry.SaveAsync(subToolCategory);
@@ -130,7 +131,7 @@ namespace VSC.Toolsy.Services
                 return true;
         }
 
-        public async Task<bool> UpdateSubToolCategoryAsync(Guid subToolCategoryId,UpdateSubToolCategoryRequestDto updateSubToolCategoryRequestDto)
+        public async Task<bool> UpdateSubToolCategoryAsync(Guid subToolCategoryId, UpdateSubToolCategoryRequestDto updateSubToolCategoryRequestDto)
         {
             ToolCategory subToolCategory = await _toolCategoryRepositoiry.GetByIdAsync(subToolCategoryId);
             subToolCategory.Name = updateSubToolCategoryRequestDto.Name;
@@ -140,7 +141,7 @@ namespace VSC.Toolsy.Services
             subToolCategory.UpdatedBy = UserRole.Admin.ToString();
             subToolCategory.UpdatedAt = DateTime.UtcNow;
 
-            int result = await  _toolCategoryRepositoiry.UpdateAsync(subToolCategory);
+            int result = await _toolCategoryRepositoiry.UpdateAsync(subToolCategory);
 
             if (result <= 0)
                 throw new Exception("Internal server error");
@@ -150,6 +151,28 @@ namespace VSC.Toolsy.Services
 
         public async Task<ToolCategory> GetBySubToolCategoryId(Guid subToolCategoryId)
              => await _toolCategoryRepositoiry.GetByIdAsync(subToolCategoryId);
+
+        public async Task<PaginatedResult<ToolResponseDto>> GetToolsBySubCategoryIdAsync(
+        string subCategoryId,
+        int page,
+        int pageSize,
+        string? sortBy,
+        string? search,
+        CancellationToken cancellationToken)
+        {
+            if (!Guid.TryParse(subCategoryId, out Guid subCategoryGuid))
+            {
+                throw new ArgumentException("Invalid SubCategoryId format.", nameof(subCategoryId));
+            }
+            return await _toolCategoryRepositoiry.GetToolsBySubCategoryIdAsync(
+       subCategoryGuid,
+       page,
+       pageSize,
+       sortBy,
+       search,
+       cancellationToken
+               );
+        }
 
         #endregion
     }

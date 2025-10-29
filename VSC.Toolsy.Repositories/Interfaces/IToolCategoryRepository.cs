@@ -1,5 +1,6 @@
 ﻿using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Models.CoreEntites;
+using VSC.Toolsy.Common.Models.Pagination;
 
 namespace VSC.Toolsy.Repositories.Interfaces
 {
@@ -24,5 +25,12 @@ namespace VSC.Toolsy.Repositories.Interfaces
         Task<int> DeleteAsync(ToolCategory toolCategory);
 
         Task<ToolCategory> GetToolCategoryByParentId(Guid parentCategoryId);
+
+        Task<PaginatedResult<ToolResponseDto>> GetToolsBySubCategoryIdAsync(Guid subCategoryId,
+        int page = 1,
+        int pageSize = 10,
+        string? sortBy = null,
+        string? search = null,
+        CancellationToken cancellationToken = default);
     }
 }

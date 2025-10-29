@@ -4,6 +4,7 @@ using VSC.Toolsy.Common.Models.CoreEntites;
 using VSC.Toolsy.Repositories.Data;
 using VSC.Toolsy.Repositories.Interfaces;
 using VSC.Toolsy.Common.DTOs.Responses;
+using VSC.Toolsy.Common.Models.Pagination;
 
 namespace VSC.Toolsy.Repositories.implementation
 {
@@ -213,6 +214,102 @@ namespace VSC.Toolsy.Repositories.implementation
             {
               return  await  context.ToolCategories.FirstOrDefaultAsync(t => t.Id.Equals(parentCategoryId) && !t.IsDeleted)
                     ?? throw new ToolCategoryNotFoundException($"Toolcategory not found with this id {parentCategoryId}");
+            }
+        }
+
+
+        public async Task<PaginatedResult<ToolResponseDto>> GetToolsBySubCategoryIdAsync(
+            Guid subCategoryId, 
+            int page = 1, 
+            int pageSize = 10, 
+            string? sortBy = null, 
+            string? search = null, 
+            CancellationToken cancellationToken = default)
+        {
+            using(ApplicationDbContext context = new ApplicationDbContext())
+            {
+                if (page < 1) page = 1;
+                const int MAX_PAGE_SIZE = 100;
+                if (pageSize < 1) pageSize = 10;
+                if (pageSize > MAX_PAGE_SIZE) pageSize = MAX_PAGE_SIZE;
+
+                IQueryable<Tool> query = context.Tools
+                    .Include(t => t.ToolImages)
+                    .Include(t => t.ToolSpecifications)
+                    .Include(t => t.ToolAvailabilities)
+                .Where(t => t.ToolCategoryId == subCategoryId && !t.IsDeleted);
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    string lowered = search.ToLower();
+                    query = query.Where(t => t.Name.ToLower().Contains(lowered) || t.Brand.ToLower().Contains(lowered));
+                }
+
+                query = sortBy?.ToLower() switch
+                {
+                    "price-low" => query.OrderBy(t => t.DailyRate),
+                    "price-high" => query.OrderByDescending(t => t.DailyRate),
+                    "newest" => query.OrderByDescending(t => t.ManufactureYear),
+                    "oldest" => query.OrderBy(t => t.ManufactureYear),
+                    _ => query.OrderBy(t => t.Name)
+                };
+
+                int totalCount = await query.CountAsync(cancellationToken);
+
+                List<ToolResponseDto> toolsFromDb = await query
+           .Skip((page - 1) * pageSize)
+           .Take(pageSize)
+           .Select(t => new ToolResponseDto
+           {
+               ToolId = t.Id,
+               Name = t.Name,
+               Description = t.Description,
+               Brand = t.Brand,
+               Model = t.Model,
+               SerialNumber = t.SerialNumber,
+               ManufactureYear = t.ManufactureYear,
+               Condition = t.Condition,
+               HourlyRate = t.HourlyRate,
+               DailyRate = t.DailyRate,
+               WeeklyRate = t.WeeklyRate,
+               MonthlyRate = t.MonthlyRate,
+               YearlyRate = t.YearlyRate,
+               SecurityDeposit = t.SecurityDeposit,
+               AvailabilityStatus = t.AvailabilityStatus,
+               RequiresOperator = t.RequiresOperator,
+               OperatorRequirements = t.OperatorRequirements,
+               SafetyInstructions = t.SafetyInstructions,
+               ToolImages = t.ToolImages,
+               ToolSpecifications = t.ToolSpecifications
+                            .Where(ts => !ts.IsDeleted)
+                            .Select(ts => new ToolSpecificationResponseDto
+                            {
+                                ToolSpecificationId = ts.Id,
+                                Name = ts.Name,
+                                Value = ts.Value,
+                                Unit = ts.Unit
+                            }).ToList(),
+               ToolAvailabilities = t.ToolAvailabilities
+                            .Where(t => !t.IsDeleted)
+                            .Select(ta => new ToolAvailabilityResponseDto
+                            {
+                                ToolAvailabilityId = ta.Id,
+                                Date = ta.Date,
+                                StartTime = ta.StartTime,
+                                EndTime = ta.EndTime,
+                                IsAvailable = ta.IsAvailable,
+                                Notes = ta.Notes
+                            }).ToList()
+
+           }).ToListAsync(cancellationToken);
+
+                return new PaginatedResult<ToolResponseDto>
+                {
+                    Items = toolsFromDb,
+                    TotalCount = totalCount,
+                    Page = page,
+                    PageSize = pageSize
+                };
             }
         }
     }
