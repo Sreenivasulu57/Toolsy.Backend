@@ -1,4 +1,5 @@
-﻿using VSC.Toolsy.Common.Models.CoreEntites;
+﻿using VSC.Toolsy.Common.DTOs.Responses;
+using VSC.Toolsy.Common.Models.CoreEntites;
 
 namespace VSC.Toolsy.Repositories.Interfaces
 {
@@ -15,6 +16,7 @@ namespace VSC.Toolsy.Repositories.Interfaces
 
         Task<List<Tool>> GetAllByOwnerId(Guid ownerId);
         Task<List<Tool>> GetAllWithImagesAsync();
+        Task<ToolResponseDto> GetByFullToolId(Guid toolId);
         Task<Tool> GetByToolId(Guid toolId);
     }
 }

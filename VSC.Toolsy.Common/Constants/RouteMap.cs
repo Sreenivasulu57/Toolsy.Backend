@@ -58,6 +58,8 @@
             public const string DeleteByToolId = "delete-by-toolid";
             public const string FetchAllByOwnerId = "fetch-all-by-ownerid";
             public const string FetchAll = "fetch-all";
+            public const string FetchById = "get-by-id";
+
         }
 
         public static class User
@@ -95,6 +97,7 @@
             public const string Delete = "delete";
             public const string GetById = "get-by-id";
             public const string GetAll = "get-all";
+            public const string GetPaginatedById = "get-by-subcategoryid";
         }
 
         public static class ToolSpecification

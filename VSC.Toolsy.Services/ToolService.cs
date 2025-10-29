@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VSC.Toolsy.Common.DTOs.Requests;
+using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Enums;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
@@ -16,7 +17,7 @@ namespace VSC.Toolsy.Services
         {
             _ownerRepository = ownerRepository;
             _toolRepository = toolRepository;
-            
+
 
         }
 
@@ -146,6 +147,16 @@ namespace VSC.Toolsy.Services
 
         public async Task<List<Tool>> GetAll()
             => await _toolRepository.GetAllWithImagesAsync();
+
+        public async Task<ToolResponseDto> GetByIdAsync(string toolId)
+        {
+            if (!Guid.TryParse(toolId, out Guid toolGuid))
+            {
+                return null;
+            }
+
+            return await _toolRepository.GetByFullToolId(toolGuid);
+        }
 
     }
 }

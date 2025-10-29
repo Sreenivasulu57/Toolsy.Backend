@@ -1,4 +1,5 @@
 ﻿using VSC.Toolsy.Common.DTOs.Requests;
+using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Models.CoreEntites;
 
 namespace VSC.Toolsy.Common.Interfaces
@@ -10,5 +11,6 @@ namespace VSC.Toolsy.Common.Interfaces
         Task<Tool> UpdateByToolId(ToolRequestDto toolRequestDto, Guid toolId);
         Task<Tool> DeleteByToolId(Guid toolId);
         Task<List<Tool>> GetAll();
+        Task<ToolResponseDto> GetByIdAsync(string toolId);
     }
 }

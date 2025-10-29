@@ -84,5 +84,22 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<List<Tool>>.SuccessResponse(tools, "Tools fetched succesfully"));
 
         }
+
+        [AllowAnonymous]
+        [HttpGet(RouteMap.Tool.FetchById)]
+        [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetToolByIdAsync(string tooldId)
+        {
+            ToolResponseDto toolFromDb = await _toolService.GetByIdAsync(tooldId);
+
+            if (toolFromDb == null)
+                return BadRequest(ApiResponseDto<string>.FailureResponse("Tool not found or Toolid is not correct"));
+            else
+                return Ok(ApiResponseDto<ToolResponseDto>.SuccessResponse(toolFromDb, "Tool fetched successfully"));
+
+        }
     }
 }

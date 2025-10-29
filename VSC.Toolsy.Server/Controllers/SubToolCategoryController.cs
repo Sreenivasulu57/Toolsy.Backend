@@ -5,6 +5,7 @@ using VSC.Toolsy.Common.DTOs.Requests;
 using VSC.Toolsy.Common.DTOs.Responses;
 using VSC.Toolsy.Common.Interfaces;
 using VSC.Toolsy.Common.Models.CoreEntites;
+using VSC.Toolsy.Common.Models.Pagination;
 using VSC.Toolsy.Services;
 
 namespace VSC.Toolsy.Server.Controllers
@@ -14,10 +15,12 @@ namespace VSC.Toolsy.Server.Controllers
     public class SubToolCategoryController : ControllerBase
     {
         private readonly IToolCategoryService _toolCategoryService;
+        private readonly ILogger<SubToolCategoryController> _logger;
 
-        public SubToolCategoryController(IToolCategoryService toolCategoryService)
+        public SubToolCategoryController(IToolCategoryService toolCategoryService, ILogger<SubToolCategoryController> logger)
         {
             _toolCategoryService = toolCategoryService;
+            _logger = logger;
         }
 
         [HttpPost(RouteMap.SubToolcategory.Save)]
@@ -111,6 +114,41 @@ namespace VSC.Toolsy.Server.Controllers
             return Ok(ApiResponseDto<List<SubToolCategoryResponseDto>>.SuccessResponse(
                 listOfToolCategoryFromDb,
                 "List of subtoolcategories fetched successfully"
+            ));
+        }
+
+        [HttpGet(RouteMap.SubToolcategory.GetPaginatedById)]
+        [ProducesResponseType(typeof(ApiResponseDto<ToolResponseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetToolsSubCategoryId(
+            [FromQuery] string subCategoryId,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string sortBy = "name",
+            [FromQuery] string? search = null,
+            CancellationToken cancellationToken = default)
+        {
+            _logger.LogInformation($"The frontend sent subtoolcategoryid is {subCategoryId}");
+            if (subCategoryId == null)
+                return BadRequest(ApiResponseDto<string>.FailureResponse("SubCategoryId should not be null or empty."));
+
+            PaginatedResult<ToolResponseDto> result = await _toolCategoryService.GetToolsBySubCategoryIdAsync(
+                subCategoryId,
+                page,
+                pageSize,
+                sortBy,
+                search,
+                cancellationToken
+            );
+
+            if (result == null || !result.Items.Any())
+                return NotFound(ApiResponseDto<string>.FailureResponse("No tools found for the given subcategory."));
+
+            return Ok(ApiResponseDto<PaginatedResult<ToolResponseDto>>.SuccessResponse(
+                result,
+                "Tools fetched successfully."
             ));
         }
 
