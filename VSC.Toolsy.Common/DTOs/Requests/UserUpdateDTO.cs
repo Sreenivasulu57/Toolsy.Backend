@@ -27,11 +27,6 @@ namespace VSC.Toolsy.Common.DTOs.Requests
         [Required(ErrorMessage = "Gender required")]
         public required Gender Gender { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
-        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long")]
-        [DataType(DataType.Password)]
-        public string Password { get; set; } = string.Empty;
-
         [Required(ErrorMessage = "Email is required")]
         [Url(ErrorMessage = "Invalid profile image URL")]
         public string? ProfileImageUrl { get; set; }

@@ -18,15 +18,20 @@ namespace VSC.Toolsy.Services
             _profileRepository = profileRepository;
         }
 
-        public async Task<Address> UpdateAddress(AddressRegisterDto addressRegisterDto)
+        public async Task<Address> UpdateAddress(AddressRegisterDto addressRegisterDto,string profileId)
         {
+            if (!Guid.TryParse(profileId, out Guid profileGuid))
+            {
+                throw new UserNotFoundException($"user with id {profileId} is not present");
+            }
 
-            Profile profileFromDb = await _profileService.GetProfileWithAddressByProfileId(addressRegisterDto.ProfileId);
+
+          Profile  profileFromDb = await _profileService.GetProfileWithAddressByProfileId(profileGuid);
 
             if (profileFromDb == null || profileFromDb.IsDeleted) throw new AddressNotFoundException("Addresses not found");
 
             if (profileFromDb.Address != null &&
-       profileFromDb.Address.ProfileId == addressRegisterDto.ProfileId)
+       profileFromDb.Address.ProfileId == profileGuid)
             {
                 profileFromDb.Address.AddressLine1 = addressRegisterDto.AddressLine1;
                 profileFromDb.Address.AddressLine2 = addressRegisterDto.AddressLine2;
@@ -69,9 +74,14 @@ namespace VSC.Toolsy.Services
 
         }
 
-        public async Task<Address> SaveAddressAsync(AddressRegisterDto addressRegisterDto)
+        public async Task<Address> SaveAddressAsync(AddressRegisterDto addressRegisterDto,string profileId)
         {
-            Profile profile = await _profileService.GetByProfileId(addressRegisterDto.ProfileId);
+            if (!Guid.TryParse(profileId, out Guid profileGuid))
+            {
+                throw new UserNotFoundException($"user with id {profileGuid} is not present");
+            } 
+
+            Profile profile = await _profileService.GetByProfileId(profileGuid);
 
             Address address = new Address()
             {
@@ -97,6 +107,14 @@ namespace VSC.Toolsy.Services
             return address;
         }
 
+        public async Task<Address> GetAddressByProfileId(string profileId)
+        {
+            if(!Guid.TryParse(profileId,out Guid profileGuid))
+            {
+                throw new AddressNotFoundException($"Address not found for this id {profileId}");
+            }
 
+            return await _addressRepository.GetByProfileId(profileGuid);
+        }
     }
 }

@@ -12,25 +12,25 @@ namespace VSC.Toolsy.Repositories.implementation
     {
         public int Delete(ToolCategory toolCategory)
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
-                 context.ToolCategories.Remove(toolCategory);
+                context.ToolCategories.Remove(toolCategory);
                 return context.SaveChanges();
             }
         }
 
         public Task<int> DeleteAsync(ToolCategory toolCategory)
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 context.ToolCategories.Remove(toolCategory);
-               return  context.SaveChangesAsync();
+                return context.SaveChangesAsync();
             }
         }
 
         public async Task<List<ToolCategoryResponseDto>> GetAllToolCategoryAsync()
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 return await context.ToolCategories.Where(tc => !tc.IsDeleted && tc.ParentCategoryId == null)
                     .Select(tc => new ToolCategoryResponseDto
@@ -102,7 +102,7 @@ namespace VSC.Toolsy.Repositories.implementation
         }
         public async Task<List<SubToolCategoryResponseDto>> GetAllSubToolCategoryAsync()
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 return await context.ToolCategories.Where(t => !t.IsDeleted && t.ParentCategoryId != null)
                     .Select(sc =>
@@ -159,22 +159,22 @@ namespace VSC.Toolsy.Repositories.implementation
                             }).ToList()
                         }).ToList()
                     }).ToListAsync();
-                       
+
             }
         }
 
-        public  async Task<ToolCategory> GetByIdAsync(Guid toolCategoryId)
+        public async Task<ToolCategory> GetByIdAsync(Guid toolCategoryId)
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
-               return  await context.ToolCategories.FirstOrDefaultAsync(t => t.Id.Equals(toolCategoryId) && !t.IsDeleted )
-                ?? throw new ToolCategoryNotFoundException("ToolCategory with id {toolCategoryId} is not found");
+                return await context.ToolCategories.FirstOrDefaultAsync(t => t.Id.Equals(toolCategoryId) && !t.IsDeleted)
+                 ?? throw new ToolCategoryNotFoundException("ToolCategory with id {toolCategoryId} is not found");
             }
         }
 
         public int Save(ToolCategory toolCategory)
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 context.ToolCategories.Add(toolCategory);
                 return context.SaveChanges();
@@ -183,25 +183,25 @@ namespace VSC.Toolsy.Repositories.implementation
 
         public async Task<int> SaveAsync(ToolCategory toolCategory)
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 context.ToolCategories.AddAsync(toolCategory);
                 return await context.SaveChangesAsync();
             }
         }
 
-        public  int Update(ToolCategory toolCategory)
+        public int Update(ToolCategory toolCategory)
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 context.ToolCategories.Update(toolCategory);
-                return  context.SaveChanges();
+                return context.SaveChanges();
             }
         }
 
         public async Task<int> UpdateAsync(ToolCategory toolCategory)
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 context.ToolCategories.Update(toolCategory);
                 return await context.SaveChangesAsync();
@@ -210,23 +210,22 @@ namespace VSC.Toolsy.Repositories.implementation
 
         public async Task<ToolCategory> GetToolCategoryByParentId(Guid parentCategoryId)
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
-              return  await  context.ToolCategories.FirstOrDefaultAsync(t => t.Id.Equals(parentCategoryId) && !t.IsDeleted)
-                    ?? throw new ToolCategoryNotFoundException($"Toolcategory not found with this id {parentCategoryId}");
+                return await context.ToolCategories.FirstOrDefaultAsync(t => t.Id.Equals(parentCategoryId) && !t.IsDeleted)
+                      ?? throw new ToolCategoryNotFoundException($"Toolcategory not found with this id {parentCategoryId}");
             }
         }
 
-
         public async Task<PaginatedResult<ToolResponseDto>> GetToolsBySubCategoryIdAsync(
-            Guid subCategoryId, 
-            int page = 1, 
-            int pageSize = 10, 
-            string? sortBy = null, 
-            string? search = null, 
+            Guid subCategoryId,
+            int page = 1,
+            int pageSize = 10,
+            string? sortBy = null,
+            string? search = null,
             CancellationToken cancellationToken = default)
         {
-            using(ApplicationDbContext context = new ApplicationDbContext())
+            using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 if (page < 1) page = 1;
                 const int MAX_PAGE_SIZE = 100;
@@ -314,3 +313,4 @@ namespace VSC.Toolsy.Repositories.implementation
         }
     }
 }
+

@@ -9,28 +9,19 @@ namespace VSC.Toolsy.Common.Interfaces
     {
         #region Parent ToolCategory
         Task<bool> SaveToolCategoryAsync(ParentToolCategoryRequestDto parentToolCategoryRequestDto);
-
         Task<bool> UpdateToolCategoryAsync(Guid toolCategoryId,UpdateParentToolCategoryRequestDto updateParentToolCategoryRequestDto);
-
         Task<ToolCategory> GetByToolCategoryId(Guid toolCategoryId);
-
         Task<List<ToolCategoryResponseDto>> GetAllToolCategory();
-
         Task<bool> DeleteToolCategoryByIdAsync(Guid toolCategoryId);
 
         #endregion
 
         #region Sub ToolCategory
         Task<bool> SaveSubToolCategoryAsync(SubToolCategoryRequestDto SubToolCategoryRequestDto);
-
         Task<bool> UpdateSubToolCategoryAsync(Guid toolCategoryId,UpdateSubToolCategoryRequestDto updateParentToolCategoryRequestDto);
-
         Task<ToolCategory> GetBySubToolCategoryId(Guid toolCategoryId);
-
         Task<List<SubToolCategoryResponseDto>> GetAllSubToolCategory();
-
         Task<bool> DeleteSubToolCategoryByIdAsync(Guid toolCategoryId);
-
         Task<PaginatedResult<ToolResponseDto>> GetToolsBySubCategoryIdAsync(
         string subCategoryId,
         int page = 1,
