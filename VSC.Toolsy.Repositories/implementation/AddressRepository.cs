@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using VSC.Toolsy.Common.Exceptions;
 using VSC.Toolsy.Common.Models.CoreEntites;
 using VSC.Toolsy.Repositories.Data;
 using VSC.Toolsy.Repositories.Interfaces;
@@ -59,6 +60,16 @@ namespace VSC.Toolsy.Repositories.implementation
             {
                 context.Addresses.Remove(address);
                 return await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<Address> GetByProfileId(Guid profileId)
+        {
+            using(ApplicationDbContext context = new ApplicationDbContext())
+            {
+                return await context.Addresses.Where(a => a.ProfileId.Equals(profileId))
+                    .FirstOrDefaultAsync()
+                    ?? throw new AddressNotFoundException($"Address is not found for this id {profileId}");
             }
         }
     }

@@ -17,9 +17,7 @@ namespace VSC.Toolsy.Server.Controllers
         private readonly IToolService _toolService;
         public ToolController(IToolService toolService)
         {
-
             _toolService = toolService;
-
         }
 
         [HttpPost(RouteMap.Tool.Save)]
@@ -87,7 +85,7 @@ namespace VSC.Toolsy.Server.Controllers
 
         [AllowAnonymous]
         [HttpGet(RouteMap.Tool.FetchById)]
-        [ProducesResponseType(typeof(ApiResponseDto<Tool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponseDto<ToolResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
@@ -99,6 +97,25 @@ namespace VSC.Toolsy.Server.Controllers
                 return BadRequest(ApiResponseDto<string>.FailureResponse("Tool not found or Toolid is not correct"));
             else
                 return Ok(ApiResponseDto<ToolResponseDto>.SuccessResponse(toolFromDb, "Tool fetched successfully"));
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet(RouteMap.Tool.Search)]
+        [ProducesResponseType(typeof(ApiResponseDto<List<ToolResponseDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SearchTools(string query)
+        {
+            if (query == null)
+                return BadRequest(ApiResponseDto<string>.FailureResponse("Search type cannot be null"));
+            List<ToolResponseDto> toolsFromDb = await _toolService.SearchTools(query);
+
+            if (toolsFromDb == null)
+                return BadRequest(ApiResponseDto<string>.FailureResponse("Tools not found or searchquery is not correct"));
+            else
+                return Ok(ApiResponseDto<List<ToolResponseDto>>.SuccessResponse(toolsFromDb, "Tool fetched successfully"));
 
         }
     }

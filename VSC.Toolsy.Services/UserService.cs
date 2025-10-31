@@ -88,8 +88,7 @@ namespace VSC.Toolsy.Services
             userFromDb.FirstName = userUpdateDTO.FirstName;
             userFromDb.LastName = userUpdateDTO.LastName;
             userFromDb.PhoneNumber = userUpdateDTO.PhoneNumber;
-            userFromDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userUpdateDTO.Password);
-            userFromDb.ProfileImageUrl = _defaultImage;
+            userFromDb.ProfileImageUrl = userUpdateDTO.ProfileImageUrl;
             userFromDb.DateOfBirth = userUpdateDTO.DateOfBirth;
 
             userFromDb.UpdatedBy = UserRole.User.ToString();
@@ -123,7 +122,6 @@ namespace VSC.Toolsy.Services
                 profileId = profileFromDb.Id.ToString(),
                 FirstName = profileFromDb.FirstName,
                 LastName = profileFromDb.LastName,
-                Email = profileFromDb.Email,
                 PhoneNumber = profileFromDb.PhoneNumber,
                 DateOfBirth = profileFromDb.DateOfBirth,
                 Gender = profileFromDb.Gender,

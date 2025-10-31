@@ -8,6 +8,10 @@
         {
             public const string Base = RouteMap.Base + "address";
             public const string GetByProfileId = "by-profileid";
+            public const string Save = "save";
+            public const string Update = "update";
+            public const string Delete = "delete-by-id";
+
         }
 
         public static class Admin
@@ -59,6 +63,7 @@
             public const string FetchAllByOwnerId = "fetch-all-by-ownerid";
             public const string FetchAll = "fetch-all";
             public const string FetchById = "get-by-id";
+            public const string Search = "search";
 
         }
 

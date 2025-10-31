@@ -12,5 +12,6 @@ namespace VSC.Toolsy.Common.Interfaces
         Task<Tool> DeleteByToolId(Guid toolId);
         Task<List<Tool>> GetAll();
         Task<ToolResponseDto> GetByIdAsync(string toolId);
+        Task<List<ToolResponseDto>> SearchTools(string query);
     }
 }

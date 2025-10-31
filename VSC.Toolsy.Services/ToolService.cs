@@ -158,5 +158,9 @@ namespace VSC.Toolsy.Services
             return await _toolRepository.GetByFullToolId(toolGuid);
         }
 
+        public async Task<List<ToolResponseDto>> SearchTools(string query)
+        {
+            return await _toolRepository.SearchTools(query);
+        }
     }
 }

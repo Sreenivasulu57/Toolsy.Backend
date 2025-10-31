@@ -4,9 +4,6 @@ namespace VSC.Toolsy.Common.DTOs.Requests
 {
     public class AddressRegisterDto
     {
-        [Required(ErrorMessage = "ProfileId is required")]
-        public required Guid ProfileId { get; set; }
-
         [Required]
         [MaxLength(200, ErrorMessage = "AddressLine1 cannot exceed than 200 chars")]
         public required string AddressLine1 { get; set; }

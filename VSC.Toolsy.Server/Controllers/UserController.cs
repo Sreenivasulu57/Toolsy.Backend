@@ -57,7 +57,7 @@ namespace VSC.Toolsy.Server.Controllers
             if (string.IsNullOrWhiteSpace(profileIdClaim))
                 return NotFound(ApiResponseDto<string>.FailureResponse("Profile ID not found in token."));
 
-            var userDto = await _userService.getProfileById(profileIdClaim);
+            UserResposeDto userDto = await _userService.getProfileById(profileIdClaim);
 
             if (userDto == null)
                 return NotFound(ApiResponseDto<string>.FailureResponse("User not found."));
@@ -88,29 +88,32 @@ namespace VSC.Toolsy.Server.Controllers
         }
 
         [HttpPut(RouteMap.User.Update)]
-        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)] 
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)] 
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)] 
-        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)] 
-        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO, Guid profileId)
+        [ProducesResponseType(typeof(ApiResponseDto<Profile>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponseDto<string>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO)
         {
+            string profileIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value;
+            _logger.LogInformation(profileIdClaim);
 
-            if (userUpdateDTO == null || profileId == null)
+            if (string.IsNullOrWhiteSpace(profileIdClaim))
+                return NotFound(ApiResponseDto<string>.FailureResponse("Profile ID not found in token."));
+
+            UserResposeDto userDto = await _userService.getProfileById(profileIdClaim);
+            if (userDto == null)
+                return NotFound(ApiResponseDto<string>.FailureResponse("User not found."));
+
+            if (Guid.TryParse(profileIdClaim, out Guid profileGuid))
             {
-                return BadRequest(ApiResponseDto<string>.FailureResponse("Invalid input data."));
+                Profile userFromDb = await _userService.UpdateUser(userUpdateDTO, profileGuid);
+                if (userFromDb != null)
+                    return Ok(ApiResponseDto<string>.SuccessResponse(null, "User updated successfully"));
             }
 
-            Profile userFromDb = await _userService.UpdateUser(userUpdateDTO, profileId);
-
-
-            if (userFromDb == null)
-            {
-                return NotFound(ApiResponseDto<string>.FailureResponse("User not found or could not be updated."));
-            }
-
-            return Ok(ApiResponseDto<Profile>.SuccessResponse(userFromDb, "Updated User successfully"));
-
+            return BadRequest(ApiResponseDto<string>.FailureResponse("Failed to update user."));
         }
+
 
     }
 }
